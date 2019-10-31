@@ -1,10 +1,17 @@
 var board;
 var moving = false;
+var images = [];
 
-var titleSize = 100;
+var tileSize = 100;
 
 function setup() {
   createCanvas(800, 800);
+  for (var i = 1; i < 10; i++) {
+    images.push(loadImage("assets/2000px-Chess_Pieces_Sprite_0" + i + ".png"));
+  }
+  for (var i = 10; i < 13; i++) {
+    images.push(loadImage("assets/2000px-Chess_Pieces_Sprite_" + i + ".png"));
+  }
   board = new Board;
 }
 
@@ -23,14 +30,14 @@ function showGrid() {
         fill(240);
       }
       noStroke();
-      rect(i * titleSize, j * titleSize, titleSize, titleSize);
+      rect(i * tileSize, j * tileSize, tileSize, tileSize);
     }
   }
 }
 
 function mousePressed() {
-  var x = floor(mouseX / titleSize);
-  var y = floor(mouseY / titleSize);
+  var x = floor(mouseX / tileSize);
+  var y = floor(mouseY / tileSize);
   if (!board.isDone()) {
     if (!moving) {
       movingPiece = board.getPieceAt(x, y);

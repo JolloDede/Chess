@@ -1,30 +1,33 @@
 class Piece {
-  constructor(x, y, isWhite, letter) {
+  constructor(x, y, isWhite, letter, pic) {
     this.matrixPosition = createVector(x, y);
-    this.pixelPositon = createVector(x * titleSize + titleSize / 2, y * titleSize + titleSize / 2);
+    this.pixelPositon = createVector(x * tileSize + tileSize / 2, y * tileSize + tileSize / 2);
 
     this.taken = false;
     this.white = isWhite;
     this.letter = letter;
+    this.pic = pic;
     this.movingThisPiece = false;
   }
 
   show() {
     if (!this.taken) {
-      textSize(40);
-      strokeWeight(10);
-      if (this.white) {
-        fill(255);
-        stroke(0);
-      } else {
-        fill(30);
-        stroke(255);
-      }
-      textAlign(CENTER, CENTER);
+      //textSize(40);
+      //strokeWeight(10);
+      //if (this.white) {
+      //  fill(255);
+      //  stroke(0);
+      //} else {
+      //  fill(30);
+      //  stroke(255);
+      //}
+      //textAlign(CENTER, CENTER);
       if (this.movingThisPiece) {
-        text(this.letter, mouseX, mouseY);
+        //text(this.letter, mouseX, mouseY);
+        image(this.pic, mouseX-50, mouseY-50, tileSize*1.5, tileSize*1.5);
       } else {
-        text(this.letter, this.pixelPositon.x, this.pixelPositon.y);
+        //text(this.letter, this.pixelPositon.x, this.pixelPositon.y);
+        image(this.pic, this.pixelPositon.x-50, this.pixelPositon.y-50, tileSize, tileSize);
       }
     }else {
       console.log(this.letter);
@@ -37,7 +40,7 @@ class Piece {
       attacking.taken = true;
     }
     this.matrixPosition = createVector(x, y);
-    this.pixelPositon = createVector(x * titleSize + titleSize / 2, y * titleSize + titleSize / 2);
+    this.pixelPositon = createVector(x * tileSize + tileSize / 2, y * tileSize + tileSize / 2);
   }
 
   withinBounds(x, y) {
@@ -88,6 +91,11 @@ class King extends Piece {
   constructor(x, y, isWhite) {
     super(x, y, isWhite);
     this.letter = "K";
+    if(isWhite){
+      this.pic = images[0];
+    }else {
+      this.pic = images[6];
+    }
   }
 
   canMove(x, y, board) {
@@ -107,6 +115,11 @@ class Queen extends Piece {
   constructor(x, y, isWhite) {
     super(x, y, isWhite);
     this.letter = "Q";
+    if(isWhite){
+      this.pic = images[1];
+    }else {
+      this.pic = images[7];
+    }
   }
 
   canMove(x, y, board) {
@@ -136,6 +149,11 @@ class Rook extends Piece {
   constructor(x, y, isWhite) {
     super(x, y, isWhite);
     this.letter = "R";
+    if(isWhite){
+      this.pic = images[4];
+    }else {
+      this.pic = images[10];
+    }
   }
 
   canMove(x, y, board) {
@@ -159,6 +177,11 @@ class Bishop extends Piece {
   constructor(x, y, isWhite) {
     super(x, y, isWhite);
     this.letter = "B";
+    if(isWhite){
+      this.pic = images[2];
+    }else {
+      this.pic = images[8];
+    }
   }
 
   canMove(x, y, board) {
@@ -182,6 +205,11 @@ class Knigth extends Piece {
   constructor(x, y, isWhite) {
     super(x, y, isWhite);
     this.letter = "Kn";
+    if(isWhite){
+      this.pic = images[3];
+    }else {
+      this.pic = images[9];
+    }
   }
 
   canMove(x, y, board) {
@@ -204,6 +232,11 @@ class Pawn extends Piece {
     super(x, y, isWhite);
     this.letter = "p";
     this.firstTurn = true;
+    if(isWhite){
+      this.pic = images[5];
+    }else {
+      this.pic = images[11];
+    }
   }
 
   canMove(x, y, board) {
