@@ -249,7 +249,7 @@ class Pawn extends Piece {
     var attacking = board.pieceAt(x, y);
     if (attacking) {
       if (abs(x - this.matrixPosition.x) == abs(y - this.matrixPosition.y) &&
-        ((this.white && !(y - this.matrixPosition.y) == 1) || (!this.white && !(y - this.matrixPosition.y) == -1))) {
+        ((this.white && (y - this.matrixPosition.y) == 1) || (!this.white && (y - this.matrixPosition.y) == -1))) {
         this.firstTurn = false;
         return true;
       }
