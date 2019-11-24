@@ -8,6 +8,7 @@ class Piece {
     this.letter = letter;
     this.pic = pic;
     this.movingThisPiece = false;
+    this.value = 0;
   }
 
   show() {
@@ -29,8 +30,6 @@ class Piece {
         //text(this.letter, this.pixelPositon.x, this.pixelPositon.y);
         image(this.pic, this.pixelPositon.x-50, this.pixelPositon.y-50, tileSize, tileSize);
       }
-    }else {
-      console.log(this.letter);
     }
   }
 
@@ -96,6 +95,7 @@ class King extends Piece {
     }else {
       this.pic = images[6];
     }
+    this.value = 99;
   }
 
   canMove(x, y, board) {
@@ -109,6 +109,23 @@ class King extends Piece {
       return true;
     }
   }
+
+  generateMoves(board){
+    var moves = [];
+    for(var i = -1; i < 2; i++){
+      for(var j = -1; j < 2; j++){
+        var x = this.matrixPosition.x + i;
+        var y = this.matrixPosition.y + j;
+        if (this.withinBounds(x,y)) {
+          if (this.attackingAllies(x,y,board)) {
+            moves.push(createVector(x,y));
+          }
+        }
+      }
+    }
+    console.log(moves);
+    return moves;
+  }
 }
 
 class Queen extends Piece {
@@ -120,6 +137,7 @@ class Queen extends Piece {
     }else {
       this.pic = images[7];
     }
+    this.value = 9;
   }
 
   canMove(x, y, board) {
@@ -143,6 +161,40 @@ class Queen extends Piece {
     }
     return false;
   }
+
+  generateMoves(board){
+    moves = [];
+    // Horizontal
+    for(var i = 0; i < 8; i++){
+      var x = i;
+      var y = this.matrixPosition.y;
+      if(x != this.matrixPosition.x){
+        if(this.attackingAllies(x,y,board)){
+          if(this.moveTroughPieces(x,y,board)){
+            moves.push(createVector(x,y));
+          }
+        }
+      }
+    }
+    // Vertikal
+    for(var i = 0; i < 8; i++){
+      var x = this.matrixPosition.x;
+      var y = i;
+      if(y != this.matrixPosition.y){
+        if(this.attackingAllies(x,y,board)){
+          if(this.moveTroughPieces(x,y,board)){
+            moves.push(createVector(x,y));
+          }
+        }
+      }
+    }
+
+    for(var i = 0; i < 8; i++){
+      var x = i;
+
+    }
+  }
+
 }
 
 class Rook extends Piece {
@@ -154,6 +206,7 @@ class Rook extends Piece {
     }else {
       this.pic = images[10];
     }
+    this.value = 5;
   }
 
   canMove(x, y, board) {
@@ -182,6 +235,7 @@ class Bishop extends Piece {
     }else {
       this.pic = images[8];
     }
+    this.value = 3;
   }
 
   canMove(x, y, board) {
@@ -210,6 +264,7 @@ class Knigth extends Piece {
     }else {
       this.pic = images[9];
     }
+    this.value = 3;
   }
 
   canMove(x, y, board) {
@@ -237,6 +292,7 @@ class Pawn extends Piece {
     }else {
       this.pic = images[11];
     }
+    this.value = 1;
   }
 
   canMove(x, y, board) {
@@ -252,6 +308,8 @@ class Pawn extends Piece {
         ((this.white && (y - this.matrixPosition.y) == 1) || (!this.white && (y - this.matrixPosition.y) == -1))) {
         this.firstTurn = false;
         return true;
+      }else{
+        return false
       }
     }
     if (x - this.matrixPosition.x != 0) {

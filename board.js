@@ -2,6 +2,8 @@ class Board {
   constructor() {
     this.whitePieces = [];
     this.blackPieces = [];
+    this.scoreWhite = 0;
+    this.scoreBlack = 0;
     this.setupPieces();
   }
 
@@ -71,4 +73,20 @@ class Board {
   isDone() {
     return this.whitePieces[0].taken || this.blackPieces[0].taken;
   }
+
+  setScore(){
+    this.scoreWhite = 0;
+    for(var i = 0; i < this.whitePieces.length; i++){
+      if(this.whitePieces[i].taken){
+        this.scoreWhite += this.whitePieces[i].value;
+      }
+    }
+    this.scoreBlack = 0;
+    for(var i = 0; i < this.blackPieces.length; i++){
+      if(this.blackPieces[i].taken){
+        this.scoreBlack += this.blackPieces[i].value;
+      }
+    }
+  }
+  
 }

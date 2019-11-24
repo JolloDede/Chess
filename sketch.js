@@ -16,9 +16,13 @@ function setup() {
 }
 
 function draw() {
-  background(100);
-  showGrid();
-  board.show();
+  if(!board.isDone){
+    background(0);
+  }else{
+    background(100);
+    showGrid();
+    board.show();
+  }
 }
 
 function showGrid() {
@@ -43,6 +47,7 @@ function mousePressed() {
       movingPiece = board.getPieceAt(x, y);
       if (movingPiece != null) {
         movingPiece.movingThisPiece = true;
+        // moving piece show moves
       } else {
         return;
       }
