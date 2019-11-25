@@ -8,28 +8,28 @@ class Board {
   }
 
   setupPieces() {
-    this.whitePieces.push(new King(4, 0, true));
-    this.whitePieces.push(new Rook(0, 0, true));
-    this.whitePieces.push(new Rook(7, 0, true));
-    this.whitePieces.push(new Knigth(1, 0, true));
-    this.whitePieces.push(new Knigth(6, 0, true));
-    this.whitePieces.push(new Bishop(2, 0, true));
-    this.whitePieces.push(new Bishop(5, 0, true));
-    this.whitePieces.push(new Queen(3, 0, true));
+    this.whitePieces.push(new King(4, 7, true));
+    this.whitePieces.push(new Rook(0, 7, true));
+    this.whitePieces.push(new Rook(7, 7, true));
+    this.whitePieces.push(new Knigth(1, 7, true));
+    this.whitePieces.push(new Knigth(6, 7, true));
+    this.whitePieces.push(new Bishop(2, 7, true));
+    this.whitePieces.push(new Bishop(5, 7, true));
+    this.whitePieces.push(new Queen(3, 7, true));
     for (var i = 0; i < 8; i++) {
-      this.whitePieces.push(new Pawn(i, 1, true));
+      this.whitePieces.push(new Pawn(i, 6, true));
     }
 
-    this.blackPieces.push(new King(4, 7, false));
-    this.blackPieces.push(new Rook(0, 7, false));
-    this.blackPieces.push(new Rook(7, 7, false));
-    this.blackPieces.push(new Knigth(1, 7, false));
-    this.blackPieces.push(new Knigth(6, 7, false));
-    this.blackPieces.push(new Bishop(2, 7, false));
-    this.blackPieces.push(new Bishop(5, 7, false));
-    this.blackPieces.push(new Queen(3, 7, false));
+    this.blackPieces.push(new King(4, 0, false));
+    this.blackPieces.push(new Rook(0, 0, false));
+    this.blackPieces.push(new Rook(7, 0, false));
+    this.blackPieces.push(new Knigth(1, 0, false));
+    this.blackPieces.push(new Knigth(6, 0, false));
+    this.blackPieces.push(new Bishop(2, 0, false));
+    this.blackPieces.push(new Bishop(5, 0, false));
+    this.blackPieces.push(new Queen(3, 0, false));
     for (var i = 0; i < 8; i++) {
-      this.blackPieces.push(new Pawn(i, 6, false));
+      this.blackPieces.push(new Pawn(i, 1, false));
     }
   }
 
@@ -88,5 +88,5 @@ class Board {
       }
     }
   }
-  
+
 }
