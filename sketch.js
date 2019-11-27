@@ -25,6 +25,7 @@ function draw() {
         showGrid();
         board.show();
         AI = new RandomAI(board);
+        testAI = new MinimaxAI(board);
     }
 }
 
@@ -58,7 +59,12 @@ function mousePressed() {
         } else {
             if (movingPiece.canMove(x, y, board)) {
                 movingPiece.move(x, y, board);
-                console.log(etPieceAbsoluteValue(movingPiece));
+                console.log(testAI.getBoardAbsoluteValue(this.board.blackPieces, this.board.whitePieces));
+                // var boards = testAI.createNewBoardsWithMoves();
+                // for (var i = 0; i < boards.length; i++) {
+                //     console.log(i+1 + ": " + testAI.getBoardAbsoluteValue(boards[i].blackPieces, boards[i].whitePieces));
+                // }
+                testAI.makeMove();
                 AI.makeMove();
             }
             movingPiece.movingThisPiece = false;

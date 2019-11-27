@@ -76,6 +76,9 @@ class Piece {
         tempPos.x += stepDirectionX;
         tempPos.y += stepDirectionY;
         while (tempPos.x != x || tempPos.y != y) {
+            if (!this.withinBounds(tempPos.x, tempPos.y)) {
+                return false;
+            }
             if (board.pieceAt(tempPos.x, tempPos.y)) {
                 return true;
             }
@@ -84,6 +87,17 @@ class Piece {
         }
         return false;
     }
+
+    generateNewBoards(currentBoard){
+        var boards = [];
+        var moves = this.generateMoves(currentBoard);
+        for (var i = 0; i < moves.length; i++) {
+            boards[i] = currentBoard.clone();
+            boards[i].move(this.matrixPosition, moves[i]);
+        }
+        return boards;
+    }
+
 }
 
 class King extends Piece {
@@ -125,6 +139,12 @@ class King extends Piece {
         }
         // console.log(moves);
         return moves;
+    }
+
+    clone(){
+        var cloneKing = new King(this.matrixPosition.x, this.matrixPosition.y, this.white);
+        cloneKing.taken = this.taken;
+        return cloneKing;
     }
 
 }
@@ -221,6 +241,12 @@ class Queen extends Piece {
         return moves;
     }
 
+    clone(){
+        var cloneQueen = new Queen(this.matrixPosition.x, this.matrixPosition.y, this.white);
+        cloneQueen.taken = this.taken;
+        return cloneQueen;
+    }
+
 }
 
 class Rook extends Piece {
@@ -277,6 +303,12 @@ class Rook extends Piece {
             }
         }
         return moves;
+    }
+
+    clone(){
+        var cloneRook = new Rook(this.matrixPosition.x, this.matrixPosition.y, this.white);
+        cloneRook.taken = this.taken;
+        return cloneRook;
     }
 
 }
@@ -341,6 +373,12 @@ class Bishop extends Piece {
         return moves;
     }
 
+    clone(){
+        var cloneBishop = new Bishop(this.matrixPosition.x, this.matrixPosition.y, this.white);
+        cloneBishop.taken = this.taken;
+        return cloneBishop;
+    }
+
 }
 
 class Knigth extends Piece {
@@ -395,6 +433,12 @@ class Knigth extends Piece {
             }
         }
         return moves;
+    }
+
+    clone(){
+        var cloneKnight = new Knight(this.matrixPosition.x, this.matrixPosition.y, this.white);
+        cloneKnight.taken = this.taken;
+        return cloneKnight;
     }
 
 }
@@ -500,6 +544,13 @@ class Pawn extends Piece {
             }
         }
         return moves;
+    }
+
+    clone(){
+        var clonePawn = new Pawn(this.matrixPosition.x, this.matrixPosition.y, this.white);
+        clonePawn.taken = this.taken;
+        clonePawn.firstTurn = this.firstTurn;
+        return clonePawn;
     }
 
 }

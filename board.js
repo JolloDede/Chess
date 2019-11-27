@@ -45,12 +45,16 @@ class Board {
   pieceAt(x, y) {
     for (var i = 0; i < this.whitePieces.length; i++) {
       if(this.whitePieces[i].matrixPosition.x == x && this.whitePieces[i].matrixPosition.y == y){
-        return true;
+          if (!this.whitePieces[i].taken) {
+              return true;
+          }
       }
     }
     for (var i = 0; i < this.blackPieces.length; i++) {
       if(this.blackPieces[i].matrixPosition.x == x && this.blackPieces[i].matrixPosition.y == y){
-        return true;
+          if (!this.blackPieces[i].taken) {
+              return true;
+          }
       }
     }
     return false;
@@ -87,6 +91,22 @@ class Board {
         this.scoreBlack += this.blackPieces[i].value;
       }
     }
+  }
+
+  movePiece(from, to){
+      var piece = this.getPieceAt(from.x, from.y);
+      piece.move(to.x, to.y, this);
+  }
+
+  clone(){
+      var clone = new Board();
+      for (var i = 0; i < this.whitePieces.length; i++) {
+          this.whitePieces[i]
+      }
+      for (var i = 0; i < this.blackPieces.length; i++) {
+          this.blackPieces[i]
+      }
+      return clone;
   }
 
 }
