@@ -4,7 +4,7 @@ abstract class Piece {
     taken: boolean;
     white: boolean;
     letter: string;
-    pic: ImageData;
+    pic;
     movingThisPiece: boolean;
     value: number;
     constructor(x: number, y: number, isWhite: boolean, letter: string, pic) {

@@ -1,11 +1,12 @@
+// here to Setup ends
+// <reference path="../node_modules/@types/p5/index.d.ts" />
 var board;
 var moving = false;
 var images = [];
 // let ctx;
 var AI;
-
+var testAI;
 var tileSize = 100;
-
 function setup() {
     createCanvas(800, 800);
     for (var i = 1; i < 10; i++) {
@@ -16,11 +17,11 @@ function setup() {
     }
     board = new Board;
 }
-
 function draw() {
     if (!board.isDone) {
         background(0);
-    } else {
+    }
+    else {
         background(100);
         showGrid();
         board.show();
@@ -28,13 +29,13 @@ function draw() {
         testAI = new MinimaxAI(board);
     }
 }
-
 function showGrid() {
     for (var i = 0; i < 8; i++) {
         for (var j = 0; j < 8; j++) {
             if ((i + j) % 2 == 1) {
                 fill(0);
-            } else {
+            }
+            else {
                 fill(240);
             }
             noStroke();
@@ -42,10 +43,10 @@ function showGrid() {
         }
     }
 }
-
 function mousePressed() {
     var x = floor(mouseX / tileSize);
     var y = floor(mouseY / tileSize);
+    var movingPiece;
     if (!board.isDone()) {
         if (!moving) {
             movingPiece = board.getPieceAt(x, y);
@@ -53,10 +54,12 @@ function mousePressed() {
                 movingPiece.movingThisPiece = true;
                 // moving piece show moves
                 console.log(movingPiece.generateMoves(board));
-            } else {
+            }
+            else {
                 return;
             }
-        } else {
+        }
+        else {
             if (movingPiece.canMove(x, y, board)) {
                 movingPiece.move(x, y, board);
                 console.log(testAI.getBoardAbsoluteValue(this.board.blackPieces, this.board.whitePieces));
