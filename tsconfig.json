@@ -1,18 +1,18 @@
 {
     "compilerOptions": {
-        "outDir": "./dist",
+        "outDir": "./js",
         "allowJs": true,
         "target": "es5"
     },
-        "include": [
+    "include": [
         "./src/**/*",
         "./typings/**/*"
     ],
     "typeRoots": [
-     "node_modules/@types",
-     "../../DefinitelyTyped/types"
-   ],
-   "paths": {
-     "*": ["../../DefinitelyTyped/types/*"]
-   }
+        "node_modules/@types",
+        "../../DefinitelyTyped/types"
+    ],
+    "paths": {
+        "*": ["../../DefinitelyTyped/types/*"]
+    }
 }
