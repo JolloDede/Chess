@@ -1,17 +1,10 @@
-interface Vektor{
-    x: number
-    y: number;
-}
-
-var board: Board;
+var board;
 var moving = false;
 var images = [];
 // let ctx;
-var RandAI: RandomAI;
-var MinAI: MinimaxAI;
-
+var RandAI;
+var MinAI;
 var tileSize = 100;
-
 function setup() {
     createCanvas(800, 800);
     for (var i = 1; i < 10; i++) {
@@ -22,11 +15,11 @@ function setup() {
     }
     board = new Board;
 }
-
 function draw() {
     if (!board.isDone) {
         background(0);
-    } else {
+    }
+    else {
         background(100);
         showGrid();
         board.show();
@@ -34,13 +27,13 @@ function draw() {
         MinAI = new MinimaxAI(board);
     }
 }
-
-function showGrid(): void {
+function showGrid() {
     for (var i = 0; i < 8; i++) {
         for (var j = 0; j < 8; j++) {
             if ((i + j) % 2 == 1) {
                 fill(0);
-            } else {
+            }
+            else {
                 fill(240);
             }
             noStroke();
@@ -48,10 +41,10 @@ function showGrid(): void {
         }
     }
 }
-var movingPiece: Piece;
-function mousePressed(event?: object): void {
-    let x = floor(mouseX / tileSize);
-    let y = floor(mouseY / tileSize);
+var movingPiece;
+function mousePressed(event) {
+    var x = floor(mouseX / tileSize);
+    var y = floor(mouseY / tileSize);
     if (!board.isDone()) {
         if (!moving) {
             movingPiece = board.getPieceAt(x, y);
@@ -59,10 +52,12 @@ function mousePressed(event?: object): void {
                 movingPiece.movingThisPiece = true;
                 // moving piece show moves
                 console.log(movingPiece.generateMoves(board));
-            } else {
+            }
+            else {
                 return;
             }
-        } else {
+        }
+        else {
             if (movingPiece.canMove(x, y, board)) {
                 movingPiece.move(x, y, board);
                 console.log(MinAI.getBoardAbsoluteValue(this.board.blackPieces, this.board.whitePieces));

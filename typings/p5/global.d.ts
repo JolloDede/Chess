@@ -3001,7 +3001,7 @@ declare global {
      *   @param [event] optional MouseEvent callback
      *   argument.
      */
-    function mousePressed(event?: object): void;
+    // function mousePressed(event?: object): void;
 
     /**
      *   The mouseReleased() function is called every time

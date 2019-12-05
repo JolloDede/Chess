@@ -1,15 +1,12 @@
-class Board {
-    whitePieces = [];
-    blackPieces = [];
-    scoreWhite: number;
-    scoreBlack: number;
-    constructor() {
+var Board = /** @class */ (function () {
+    function Board() {
+        this.whitePieces = [];
+        this.blackPieces = [];
         this.scoreWhite = 0;
         this.scoreBlack = 0;
         this.setupPieces();
     }
-
-    setupPieces(): void {
+    Board.prototype.setupPieces = function () {
         this.whitePieces.push(new King(4, 7, true));
         this.whitePieces.push(new Rook(0, 7, true));
         this.whitePieces.push(new Rook(7, 7, true));
@@ -21,7 +18,6 @@ class Board {
         for (var i = 0; i < 8; i++) {
             this.whitePieces.push(new Pawn(i, 6, true));
         }
-
         this.blackPieces.push(new King(4, 0, false));
         this.blackPieces.push(new Rook(0, 0, false));
         this.blackPieces.push(new Rook(7, 0, false));
@@ -33,18 +29,16 @@ class Board {
         for (var i = 0; i < 8; i++) {
             this.blackPieces.push(new Pawn(i, 1, false));
         }
-    }
-
-    show(): void {
+    };
+    Board.prototype.show = function () {
         for (var i = 0; i < this.whitePieces.length; i++) {
             this.whitePieces[i].show();
         }
         for (var i = 0; i < this.blackPieces.length; i++) {
             this.blackPieces[i].show();
         }
-    }
-
-    pieceAt(x: number, y: number): boolean {
+    };
+    Board.prototype.pieceAt = function (x, y) {
         for (var i = 0; i < this.whitePieces.length; i++) {
             if (this.whitePieces[i].matrixPosition.x == x && this.whitePieces[i].matrixPosition.y == y) {
                 if (!this.whitePieces[i].taken) {
@@ -60,9 +54,8 @@ class Board {
             }
         }
         return false;
-    }
-
-    getPieceAt(x: number, y: number): Piece {
+    };
+    Board.prototype.getPieceAt = function (x, y) {
         for (var i = 0; i < this.whitePieces.length; i++) {
             if (!this.whitePieces[i].taken && this.whitePieces[i].matrixPosition.x == x && this.whitePieces[i].matrixPosition.y == y) {
                 return this.whitePieces[i];
@@ -74,13 +67,11 @@ class Board {
             }
         }
         return null;
-    }
-
-    isDone(): boolean {
+    };
+    Board.prototype.isDone = function () {
         return this.whitePieces[0].taken || this.blackPieces[0].taken;
-    }
-
-    setScore(): void {
+    };
+    Board.prototype.setScore = function () {
         this.scoreWhite = 0;
         for (var i = 0; i < this.whitePieces.length; i++) {
             if (this.whitePieces[i].taken) {
@@ -93,22 +84,20 @@ class Board {
                 this.scoreBlack += this.blackPieces[i].value;
             }
         }
-    }
-
-    movePiece(from: Vektor, to: Vektor): void {
+    };
+    Board.prototype.movePiece = function (from, to) {
         var piece = this.getPieceAt(from.x, from.y);
         piece.move(to.x, to.y, this);
-    }
-
-    clone(): Board {
+    };
+    Board.prototype.clone = function () {
         var clone = new Board();
         for (var i = 0; i < this.whitePieces.length; i++) {
-            this.whitePieces[i]
+            this.whitePieces[i];
         }
         for (var i = 0; i < this.blackPieces.length; i++) {
-            this.blackPieces[i]
+            this.blackPieces[i];
         }
         return clone;
-    }
-
-}
+    };
+    return Board;
+}());

@@ -9,10 +9,6 @@
         "./typings/**/*"
     ],
     "typeRoots": [
-        "node_modules/@types",
-        "../../DefinitelyTyped/types"
+        "typings",
     ],
-    "paths": {
-        "*": ["../../DefinitelyTyped/types/*"]
-    }
 }

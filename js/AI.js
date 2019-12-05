@@ -1,14 +1,11 @@
-class RandomAI {
-    pieces: Piece[];
-    board: Board;
-    constructor(board: Board) {
+var RandomAI = /** @class */ (function () {
+    function RandomAI(board) {
         this.pieces = board.blackPieces;
         this.board = board;
     }
-
-    makeMove(): void {
-        let piecesP = this.pieces;
-        let moves = [];
+    RandomAI.prototype.makeMove = function () {
+        var piecesP = this.pieces;
+        var moves = [];
         this.pieces = [];
         for (var i = 0; i < piecesP.length; i++) {
             if (!piecesP[i].taken) {
@@ -31,13 +28,12 @@ class RandomAI {
         } while (moves.length < 1);
         var m = Math.floor((Math.random() * moves.length) + 0);
         piece.move(moves[m].x, moves[m].y, this.board);
-    }
-}
-
-function reverseArray(array: number[][]): number[][] {
+    };
+    return RandomAI;
+}());
+function reverseArray(array) {
     return array.slice().reverse();
 }
-
 var pawnEvalWhite = [
     [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
     [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0],
@@ -48,9 +44,7 @@ var pawnEvalWhite = [
     [0.5, 1.0, 1.0, -2.0, -2.0, 1.0, 1.0, 0.5],
     [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 ];
-
 var pawnEvalBlack = reverseArray(pawnEvalWhite);
-
 var knightEval = [
     [-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0],
     [-4.0, -2.0, 0.0, 0.0, 0.0, 0.0, -2.0, -4.0],
@@ -61,7 +55,6 @@ var knightEval = [
     [-4.0, -2.0, 0.0, 0.5, 0.5, 0.0, -2.0, -4.0],
     [-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0]
 ];
-
 var bishopEvalWhite = [
     [-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0],
     [-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0],
@@ -72,9 +65,7 @@ var bishopEvalWhite = [
     [-1.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5, -1.0],
     [-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0]
 ];
-
 var bishopEvalBlack = reverseArray(bishopEvalWhite);
-
 var rookEvalWhite = [
     [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
     [0.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.5],
@@ -85,9 +76,7 @@ var rookEvalWhite = [
     [-0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.5],
     [0.0, 0.0, 0.0, 0.5, 0.5, 0.0, 0.0, 0.0]
 ];
-
 var rookEvalBlack = reverseArray(rookEvalWhite);
-
 var evalQueen = [
     [-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0],
     [-1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0],
@@ -98,7 +87,6 @@ var evalQueen = [
     [-1.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, -1.0],
     [-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0]
 ];
-
 var kingEvalWhite = [
     [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
     [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
@@ -109,10 +97,8 @@ var kingEvalWhite = [
     [2.0, 2.0, 0.0, 0.0, 0.0, 0.0, 2.0, 2.0],
     [2.0, 3.0, 1.0, 0.0, 0.0, 1.0, 3.0, 2.0]
 ];
-
 var kingEvalBlack = reverseArray(kingEvalWhite);
-
-function getPieceAbsoluteValue(piece: Piece): number {
+function getPieceAbsoluteValue(piece) {
     switch (piece.letter) {
         case "p":
             return 10 + (piece.white ? pawnEvalWhite[piece.matrixPosition.y][piece.matrixPosition.x] : pawnEvalBlack[piece.matrixPosition.y][piece.matrixPosition.x]);
@@ -129,35 +115,32 @@ function getPieceAbsoluteValue(piece: Piece): number {
         default:
     }
 }
-
-class MinimaxAI {
-    board: Board;
-    pieces: Array<Piece>;
-    constructor(board: Board) {
+var MinimaxAI = /** @class */ (function () {
+    function MinimaxAI(board) {
         this.board = board;
         this.pieces = board.blackPieces;
     }
-
-    getBoardAbsoluteValue(allyPieces: Array<Piece>, enemyPieces: Array<Piece>): number {
-        let value: number = 0;
+    MinimaxAI.prototype.getBoardAbsoluteValue = function (allyPieces, enemyPieces) {
+        var value = 0;
         for (var i = 0; i < allyPieces.length; i++) {
             if (allyPieces[i].taken) {
                 value -= allyPieces[i].value;
-            } else {
+            }
+            else {
                 value += getPieceAbsoluteValue(allyPieces[i]);
             }
         }
         for (var i = 0; i < enemyPieces.length; i++) {
             if (enemyPieces[i].taken) {
                 value += allyPieces[i].value;
-            } else {
+            }
+            else {
                 value -= getPieceAbsoluteValue(enemyPieces[i]);
             }
         }
         return value;
-    }
-
-    createNewBoardsWithMoves(board: Board, depth: number, boards: Board[]): void {
+    };
+    MinimaxAI.prototype.createNewBoardsWithMoves = function (board, depth, boards) {
         var moves = [];
         if (depth >= 3) {
             return;
@@ -174,18 +157,15 @@ class MinimaxAI {
             }
         }
         return;
-    }
-
-        makeMove(): void {
-            let boards: Board[];
-            this.createNewBoardsWithMoves(this.board, 0, boards);
-            for (var i = 0; i < boards.length; i++) {
-                console.log(this.getBoardAbsoluteValue(boards[i].blackPieces, boards[i].whitePieces));
-            }
+    };
+    MinimaxAI.prototype.makeMove = function () {
+        var boards;
+        this.createNewBoardsWithMoves(this.board, 0, boards);
+        for (var i = 0; i < boards.length; i++) {
+            console.log(this.getBoardAbsoluteValue(boards[i].blackPieces, boards[i].whitePieces));
         }
-
-        getBestMove() {
-
-        }
-
-    }
+    };
+    MinimaxAI.prototype.getBestMove = function () {
+    };
+    return MinimaxAI;
+}());
