@@ -1,3 +1,26 @@
+// var createVector = createVector();
+// var createCanvas = createCanvas();
+// var loadImage = loadImage();
+// var background = background();
+// var fill = fill();
+// var noStroke = noStroke();
+// var rect = rect();
+// var floor = floor();
+// var abs = abs();
+// var image = image();
+// var e = window.event;
+//
+// var posX = e.clientX;
+// var posY = e.clientY;
+//
+interface Vektor{
+    x: number
+    y: number;
+}
+
+// here to Setup ends
+// <reference path="../node_modules/@types/p5/index.d.ts" />
+
 var board: Board;
 var moving = false;
 var images = [];
@@ -45,9 +68,9 @@ function showGrid() {
 }
 
 function mousePressed() {
-    var x = floor(mouseX / tileSize);
-    var y = floor(mouseY / tileSize);
-    var movingPiece;
+    let x = floor(mouseX / tileSize);
+    let y = floor(mouseY / tileSize);
+    let movingPiece: Piece;
     if (!board.isDone()) {
         if (!moving) {
             movingPiece = board.getPieceAt(x, y);

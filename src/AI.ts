@@ -1,5 +1,5 @@
 class RandomAI {
-    pieces:Piece[];
+    pieces: Piece[];
     board: Board;
     constructor(board: Board) {
         this.pieces = board.blackPieces;
@@ -34,7 +34,7 @@ class RandomAI {
     }
 }
 
-function reverseArray(array) {
+function reverseArray(array: number[][]) {
     return array.slice().reverse();
 }
 
@@ -112,47 +112,40 @@ var kingEvalWhite = [
 
 var kingEvalBlack = reverseArray(kingEvalWhite);
 
-function getPieceAbsoluteValue(piece) {
+function getPieceAbsoluteValue(piece: Piece) {
     switch (piece.letter) {
         case "p":
             return 10 + (piece.white ? pawnEvalWhite[piece.matrixPosition.y][piece.matrixPosition.x] : pawnEvalBlack[piece.matrixPosition.y][piece.matrixPosition.x]);
-            break;
         case "Kn":
             return 30 + knightEval[piece.matrixPosition.y][piece.matrixPosition.x];
-            break;
         case "B":
             return 30 + (piece.white ? bishopEvalWhite[piece.matrixPosition.y][piece.matrixPosition.x] : bishopEvalBlack[piece.matrixPosition.y][piece.matrixPosition.x]);
-            break;
         case "R":
             return 50 + (piece.white ? rookEvalWhite[piece.matrixPosition.y][piece.matrixPosition.x] : rookEvalBlack[piece.matrixPosition.y][piece.matrixPosition.x]);
-            break;
         case "Q":
             return 90 + evalQueen[piece.matrixPosition.y][piece.matrixPosition.x];
-            break;
         case "K":
             return 900 + (piece.white ? kingEvalWhite[piece.matrixPosition.y][piece.matrixPosition.x] : kingEvalBlack[piece.matrixPosition.y][piece.matrixPosition.x]);
-            break;
         default:
     }
 }
 
 class MinimaxAI {
-    constructor(board) {
+    board: Board;
+    pieces: Array<Piece>;
+    constructor(board: Board) {
         this.board = board;
         this.pieces = board.blackPieces;
     }
 
-    getBoardAbsoluteValue(allyPieces, enemyPieces) {
-        var value = 0;
-        var b = 0;
-        var w = 0;
+    getBoardAbsoluteValue(allyPieces: Array<Piece>, enemyPieces: Array<Piece>) {
+        let value: number = 0;
         for (var i = 0; i < allyPieces.length; i++) {
             if (allyPieces[i].taken) {
                 value -= allyPieces[i].value;
             } else {
                 value += getPieceAbsoluteValue(allyPieces[i]);
             }
-            b += getPieceAbsoluteValue(allyPieces[i]);
         }
         for (var i = 0; i < enemyPieces.length; i++) {
             if (enemyPieces[i].taken) {
@@ -160,12 +153,11 @@ class MinimaxAI {
             } else {
                 value -= getPieceAbsoluteValue(enemyPieces[i]);
             }
-            w += getPieceAbsoluteValue(enemyPieces[i]);
         }
         return value;
     }
 
-    createNewBoardsWithMoves(board, depth, boards) {
+    createNewBoardsWithMoves(board: Board, depth: number, boards: Array<Board>) {
         if (depth >= 3) {
             return;
         }
@@ -177,7 +169,7 @@ class MinimaxAI {
                 for (var j = 0; j < moves.length; j++) {
                     boards.push(board.clone());
                     boards[boards.length - 1].movePiece(this.pieces[i].matrixPosition, moves[j]);
-                    boards.push(this.createNewBoardsWithMoves(boards[boards.length - 1], depth, boards));
+                    // this.createNewBoardsWithMoves(boards[boards.length - 1], depth, boards));
                 }
             }
         }
@@ -185,7 +177,7 @@ class MinimaxAI {
     }
 
         makeMove() {
-            var boards: Board[];
+            let boards: Board[];
             this.createNewBoardsWithMoves(this.board, 0, boards);
             for (var i = 0; i < boards.length; i++) {
                 console.log(this.getBoardAbsoluteValue(boards[i].blackPieces, boards[i].whitePieces));

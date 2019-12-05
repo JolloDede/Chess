@@ -1,6 +1,6 @@
 abstract class Piece {
-    matrixPosition;
-    pixelPositon;
+    matrixPosition: Vektor;
+    pixelPositon: Vektor;
     taken: boolean;
     white: boolean;
     letter: string;
@@ -41,7 +41,7 @@ abstract class Piece {
         }
     }
 
-    move(x, y, board) {
+    move(x: number, y: number, board: Board) {
         var attacking = board.getPieceAt(x, y);
         if (attacking != null) {
             attacking.taken = true;
@@ -50,14 +50,14 @@ abstract class Piece {
         this.pixelPositon = createVector(x * tileSize + tileSize / 2, y * tileSize + tileSize / 2);
     }
 
-    withinBounds(x, y) {
+    withinBounds(x: number, y: number) {
         if (x >= 0 && y >= 0 && x < 8 && y < 8) {
             return true;
         }
         return false;
     }
 
-    attackingAllies(x, y, board) {
+    attackingAllies(x: number, y: number, board: Board) {
         var attacking = board.getPieceAt(x, y);
         if (attacking != null) {
             if (attacking.white == this.white ) {
@@ -67,7 +67,7 @@ abstract class Piece {
         return false;
     }
 
-    moveTroughPieces(x, y, board) {
+    moveTroughPieces(x: number, y: number, board: Board) {
         var stepDirectionX = x - this.matrixPosition.x;
         if (stepDirectionX > 0) {
             stepDirectionX = 1;
@@ -97,22 +97,22 @@ abstract class Piece {
     }
 
     generateNewBoards(currentBoard: Board){
-        var boards = [];
+        var boards: Board[];
         var moves = this.generateMoves(currentBoard);
         for (var i = 0; i < moves.length; i++) {
             boards[i] = currentBoard.clone();
-            boards[i].move(this.matrixPosition, moves[i]);
+            boards[i].movePiece(this.matrixPosition, moves[i]);
         }
         return boards;
     }
 
-    abstract generateMoves(board: Board): moves;
-
+    abstract generateMoves(board: Board): Vektor[];
+    abstract canMove(x: number, y: number, board: Board): boolean;
 }
 
 class King extends Piece {
-    constructor(x: Number, y: Number, isWhite: boolean) {
-        super(x, y, isWhite, "K");
+    constructor(x: number, y: number, isWhite: boolean) {
+        super(x, y, isWhite, "K", null);
         if (isWhite) {
             this.pic = images[0];
         } else {
@@ -121,7 +121,7 @@ class King extends Piece {
         this.value = 99;
     }
 
-    canMove(x, y, board) {
+    canMove(x: number, y: number, board: Board) {
         if (!this.withinBounds(x, y)) {
             return false;
         }
@@ -134,7 +134,7 @@ class King extends Piece {
     }
 
     generateMoves(board: Board) {
-        var moves = [];
+        var moves: Vektor[];
         for (var i = -1; i < 2; i++) {
             for (var j = -1; j < 2; j++) {
                 var x = this.matrixPosition.x + i;
@@ -159,8 +159,8 @@ class King extends Piece {
 }
 
 class Queen extends Piece {
-    constructor(x, y, isWhite) {
-        super(x, y, isWhite, "Q");
+    constructor(x: number, y: number, isWhite: boolean) {
+        super(x, y, isWhite, "Q", null);
         if (isWhite) {
             this.pic = images[1];
         } else {
@@ -169,7 +169,7 @@ class Queen extends Piece {
         this.value = 9;
     }
 
-    canMove(x, y, board) {
+    canMove(x :number, y: number, board: Board) {
         if (!this.withinBounds(x, y)) {
             return false;
         }
@@ -191,8 +191,8 @@ class Queen extends Piece {
         return false;
     }
 
-    generateMoves(board) {
-        var moves = [];
+    generateMoves(board: Board) {
+        var moves: Vektor[];
         // Horizontal
         for (var i = 0; i < 8; i++) {
             var x: number = i;
@@ -259,7 +259,7 @@ class Queen extends Piece {
 
 class Rook extends Piece {
     constructor(x: number, y: number, isWhite: boolean) {
-        super(x, y, isWhite, "R");
+        super(x, y, isWhite, "R", null);
         if (isWhite) {
             this.pic = images[4];
         } else {
@@ -285,7 +285,7 @@ class Rook extends Piece {
     }
 
     generateMoves(board: Board) {
-        var moves = [];
+        var moves: Vektor[];
         for (var i = 0; i < 8; i++) {
             var x: number = i;
             var y: number = this.matrixPosition.y;
@@ -322,7 +322,7 @@ class Rook extends Piece {
 
 class Bishop extends Piece {
     constructor(x: number, y: number, isWhite: boolean) {
-        super(x, y, isWhite, "B");
+        super(x, y, isWhite, "B", null);
         if (isWhite) {
             this.pic = images[2];
         } else {
@@ -348,7 +348,7 @@ class Bishop extends Piece {
     }
 
     generateMoves(board: Board) {
-        var moves = [];
+        var moves: Vektor[];
         for (var i = 0; i < 8; i++) {
             var x = i;
             var y = this.matrixPosition.y - (this.matrixPosition.x - i);
@@ -389,7 +389,7 @@ class Bishop extends Piece {
 
 class Knigth extends Piece {
     constructor(x: number, y: number, isWhite: boolean) {
-        super(x, y, isWhite, "Kn");
+        super(x, y, isWhite, "Kn", null);
         if (isWhite) {
             this.pic = images[3];
         } else {
@@ -413,7 +413,7 @@ class Knigth extends Piece {
     }
 
     generateMoves(board: Board) {
-        var moves = [];
+        var moves: Vektor[];
         for (var i = -2; i < 3; i += 4) {
             for (var j = -1; j < 2; j += 2) {
                 var x = this.matrixPosition.x + i;
@@ -451,7 +451,7 @@ class Knigth extends Piece {
 class Pawn extends Piece {
     firstTurn: boolean;
     constructor(x: number, y: number, isWhite: boolean) {
-        super(x, y, isWhite, "p");
+        super(x, y, isWhite, "p", null);
         this.firstTurn = true;
         if (isWhite) {
             this.pic = images[5];
@@ -509,7 +509,7 @@ class Pawn extends Piece {
     }
 
     generateMoves(board: Board) {
-        var moves = [];
+        var moves: Vektor[];
         var x: number;
         var y: number;
         for (var i = -1; i < 2; i += 2) {
