@@ -128,6 +128,7 @@ var MinimaxAI = /** @class */ (function () {
     function MinimaxAI(board) {
         this.board = board;
         this.pieces = board.blackPieces;
+        this.Nodes = [];
     }
     MinimaxAI.prototype.getBoardAbsoluteValue = function (allyPieces, enemyPieces) {
         var value = 0;
@@ -172,7 +173,7 @@ var MinimaxAI = /** @class */ (function () {
         if (boards === void 0) { boards = []; }
         var moves = [];
         var pieces;
-        if (depth > 3) {
+        if (depth > 1) {
             return;
         }
         if (depth % 2 == 0) {
@@ -188,6 +189,7 @@ var MinimaxAI = /** @class */ (function () {
                 for (var j = 0; j < moves.length; j++) {
                     boards.push(board.clone());
                     boards[boards.length - 1].movePiece(pieces[i].matrixPosition, moves[j]);
+                    this.Nodes.push(new MyNode(this.getBoardAbsoluteValue(boards[boards.length - 1].whitePieces, boards[boards.length - 1].blackPieces)));
                     this.createNewBoardsWithMoves(boards[boards.length - 1], depth, boards);
                 }
             }
@@ -200,7 +202,7 @@ var MinimaxAI = /** @class */ (function () {
         for (var i = 0; i < boards.length; i++) {
             console.log(this.getBoardAbsoluteValue(boards[i].blackPieces, boards[i].whitePieces));
         }
-        console.log(boards.length);
+        console.log(boards.length + " " + this.Nodes.length);
     };
     MinimaxAI.prototype.getBestMove = function () {
     };
