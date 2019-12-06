@@ -1,3 +1,15 @@
+class MyNode{
+    value: number;
+    childNodes: MyNode[];
+    constructor(value: number){
+        this.value = value;
+    }
+
+    addSubNode(value: MyNode): void{
+        this.childNodes.push(value);
+    }
+}
+
 class RandomAI {
     pieces: Piece[];
     board: Board;
@@ -138,7 +150,7 @@ class MinimaxAI {
         this.pieces = board.blackPieces;
     }
 
-    getBoardAbsoluteValue(allyPieces: Array<Piece>, enemyPieces: Array<Piece>): number {
+    getBoardAbsoluteValue(allyPieces: Piece[], enemyPieces: Piece[]): number {
         let value: number = 0;
         for (var i = 0; i < allyPieces.length; i++) {
             if (allyPieces[i].taken) {
@@ -157,19 +169,45 @@ class MinimaxAI {
         return value;
     }
 
-    createNewBoardsWithMoves(board: Board, depth: number, boards: Board[]): void {
-        var moves = [];
-        if (depth >= 3) {
+    // getWhitePiecesMoves(board: Board): Vektor[]{
+    //     let moves: Vektor[];
+    //     for(var i = 0; i > board.whitePieces.length; i++){
+    //         if(!board.whitePieces[i].taken){
+    //             moves.push(board.whitePieces[i].generateMoves(board));
+    //         }
+    //     }
+    //     return moves;
+    // }
+    //
+    // getBlackPiecesMoves(board: Board): Vektor[]{
+    //     let moves: Vektor[];
+    //     for(var i = 0; i > board.blackPieces.length; i++){
+    //         if(!board.blackPieces[i].taken){
+    //             moves.push(board.blackPieces[i].generateMoves(board));
+    //         }
+    //     }
+    //     return moves;
+    // }
+
+    createNewBoardsWithMoves(board: Board, depth: number, boards = []): void {
+        let moves = [];
+        let pieces: Piece[];
+        if(depth > 3){
             return;
         }
+        if(depth % 2 == 0){
+            pieces = board.blackPieces;
+        }else{
+            pieces = board.whitePieces;
+        }
         depth++;
-        for (var i = 0; i < this.pieces.length; i++) {
-            if (!this.pieces[i].taken) {
-                moves = this.pieces[i].generateMoves(board);
+        for (var i = 0; i < pieces.length; i++) {
+            if (!pieces[i].taken) {
+                moves = pieces[i].generateMoves(board);
                 for (var j = 0; j < moves.length; j++) {
                     boards.push(board.clone());
-                    boards[boards.length - 1].movePiece(this.pieces[i].matrixPosition, moves[j]);
-                    // this.createNewBoardsWithMoves(boards[boards.length - 1], depth, boards));
+                    boards[boards.length - 1].movePiece(pieces[i].matrixPosition, moves[j]);
+                    this.createNewBoardsWithMoves(boards[boards.length - 1], depth, boards);
                 }
             }
         }
@@ -177,11 +215,12 @@ class MinimaxAI {
     }
 
         makeMove(): void {
-            let boards: Board[];
+            let boards = [];
             this.createNewBoardsWithMoves(this.board, 0, boards);
             for (var i = 0; i < boards.length; i++) {
                 console.log(this.getBoardAbsoluteValue(boards[i].blackPieces, boards[i].whitePieces));
             }
+            console.log(boards.length);
         }
 
         getBestMove() {

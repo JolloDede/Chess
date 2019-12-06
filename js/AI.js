@@ -1,3 +1,12 @@
+var MyNode = /** @class */ (function () {
+    function MyNode(value) {
+        this.value = value;
+    }
+    MyNode.prototype.addSubNode = function (value) {
+        this.childNodes.push(value);
+    };
+    return MyNode;
+}());
 var RandomAI = /** @class */ (function () {
     function RandomAI(board) {
         this.pieces = board.blackPieces;
@@ -140,30 +149,58 @@ var MinimaxAI = /** @class */ (function () {
         }
         return value;
     };
+    // getWhitePiecesMoves(board: Board): Vektor[]{
+    //     let moves: Vektor[];
+    //     for(var i = 0; i > board.whitePieces.length; i++){
+    //         if(!board.whitePieces[i].taken){
+    //             moves.push(board.whitePieces[i].generateMoves(board));
+    //         }
+    //     }
+    //     return moves;
+    // }
+    //
+    // getBlackPiecesMoves(board: Board): Vektor[]{
+    //     let moves: Vektor[];
+    //     for(var i = 0; i > board.blackPieces.length; i++){
+    //         if(!board.blackPieces[i].taken){
+    //             moves.push(board.blackPieces[i].generateMoves(board));
+    //         }
+    //     }
+    //     return moves;
+    // }
     MinimaxAI.prototype.createNewBoardsWithMoves = function (board, depth, boards) {
+        if (boards === void 0) { boards = []; }
         var moves = [];
-        if (depth >= 3) {
+        var pieces;
+        if (depth > 3) {
             return;
         }
+        if (depth % 2 == 0) {
+            pieces = board.blackPieces;
+        }
+        else {
+            pieces = board.whitePieces;
+        }
         depth++;
-        for (var i = 0; i < this.pieces.length; i++) {
-            if (!this.pieces[i].taken) {
-                moves = this.pieces[i].generateMoves(board);
+        for (var i = 0; i < pieces.length; i++) {
+            if (!pieces[i].taken) {
+                moves = pieces[i].generateMoves(board);
                 for (var j = 0; j < moves.length; j++) {
                     boards.push(board.clone());
-                    boards[boards.length - 1].movePiece(this.pieces[i].matrixPosition, moves[j]);
-                    // this.createNewBoardsWithMoves(boards[boards.length - 1], depth, boards));
+                    boards[boards.length - 1].movePiece(pieces[i].matrixPosition, moves[j]);
+                    this.createNewBoardsWithMoves(boards[boards.length - 1], depth, boards);
                 }
             }
         }
         return;
     };
     MinimaxAI.prototype.makeMove = function () {
-        var boards;
+        var boards = [];
         this.createNewBoardsWithMoves(this.board, 0, boards);
         for (var i = 0; i < boards.length; i++) {
             console.log(this.getBoardAbsoluteValue(boards[i].blackPieces, boards[i].whitePieces));
         }
+        console.log(boards.length);
     };
     MinimaxAI.prototype.getBestMove = function () {
     };

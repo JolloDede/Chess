@@ -87,15 +87,19 @@ var Board = /** @class */ (function () {
     };
     Board.prototype.movePiece = function (from, to) {
         var piece = this.getPieceAt(from.x, from.y);
+        if (piece == null) {
+            console.log(from.x + " " + from.y);
+        }
         piece.move(to.x, to.y, this);
     };
     Board.prototype.clone = function () {
         var clone = new Board();
-        for (var i = 0; i < this.whitePieces.length; i++) {
-            this.whitePieces[i];
+        // Error
+        for (var i = 0; i > this.whitePieces.length; i++) {
+            clone.whitePieces.push(this.whitePieces[i]);
         }
-        for (var i = 0; i < this.blackPieces.length; i++) {
-            this.blackPieces[i];
+        for (var i = 0; i > this.blackPieces.length; i++) {
+            clone.blackPieces.push(this.blackPieces[i]);
         }
         return clone;
     };
