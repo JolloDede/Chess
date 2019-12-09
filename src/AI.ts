@@ -3,11 +3,13 @@ class MyNode{
     childNodes: MyNode[];
     constructor(value: number){
         this.value = value;
+        this.childNodes = [];
     }
 
     addSubNode(value: MyNode): void{
         this.childNodes.push(value);
     }
+
 }
 
 class RandomAI {
@@ -190,10 +192,12 @@ class MinimaxAI {
     //     }
     //     return moves;
     // }
+    RootNodeindex: number;
+    BranchNodeindex: number;
     createNewBoardsWithMoves(board: Board, depth: number, boards = []): void {
         let moves = [];
         let pieces: Piece[];
-        if(depth > 1){
+        if(depth > 2){
             return;
         }
         if(depth % 2 == 0){
@@ -201,7 +205,6 @@ class MinimaxAI {
         }else{
             pieces = board.whitePieces;
         }
-        depth++;
         for (var i = 0; i < pieces.length; i++) {
             if (!pieces[i].taken) {
                 moves = pieces[i].generateMoves(board);
@@ -209,6 +212,15 @@ class MinimaxAI {
                     boards.push(board.clone());
                     boards[boards.length - 1].movePiece(pieces[i].matrixPosition, moves[j]);
                     this.Nodes.push(new MyNode(this.getBoardAbsoluteValue(boards[boards.length-1].whitePieces, boards[boards.length-1].blackPieces)));
+                    if(depth == 0){
+                        this.RootNodeindex = this.Nodes.length;
+                    }else if(depth == 1){
+                        this.Nodes[this.RootNodeindex].addSubNode(this.Nodes[this.Nodes.length-1]);
+                        this.BranchNodeindex = this.Nodes.length;
+                    }else if(depth == 2){
+                        this.Nodes[this.BranchNodeindex].addSubNode(this.Nodes[this.Nodes.length-1]);
+                    }
+                    depth++;
                     this.createNewBoardsWithMoves(boards[boards.length - 1], depth, boards);
                 }
             }

@@ -1,6 +1,7 @@
 var MyNode = /** @class */ (function () {
     function MyNode(value) {
         this.value = value;
+        this.childNodes = [];
     }
     MyNode.prototype.addSubNode = function (value) {
         this.childNodes.push(value);
@@ -150,30 +151,11 @@ var MinimaxAI = /** @class */ (function () {
         }
         return value;
     };
-    // getWhitePiecesMoves(board: Board): Vektor[]{
-    //     let moves: Vektor[];
-    //     for(var i = 0; i > board.whitePieces.length; i++){
-    //         if(!board.whitePieces[i].taken){
-    //             moves.push(board.whitePieces[i].generateMoves(board));
-    //         }
-    //     }
-    //     return moves;
-    // }
-    //
-    // getBlackPiecesMoves(board: Board): Vektor[]{
-    //     let moves: Vektor[];
-    //     for(var i = 0; i > board.blackPieces.length; i++){
-    //         if(!board.blackPieces[i].taken){
-    //             moves.push(board.blackPieces[i].generateMoves(board));
-    //         }
-    //     }
-    //     return moves;
-    // }
     MinimaxAI.prototype.createNewBoardsWithMoves = function (board, depth, boards) {
         if (boards === void 0) { boards = []; }
         var moves = [];
         var pieces;
-        if (depth > 1) {
+        if (depth > 2) {
             return;
         }
         if (depth % 2 == 0) {
@@ -182,7 +164,6 @@ var MinimaxAI = /** @class */ (function () {
         else {
             pieces = board.whitePieces;
         }
-        depth++;
         for (var i = 0; i < pieces.length; i++) {
             if (!pieces[i].taken) {
                 moves = pieces[i].generateMoves(board);
@@ -190,6 +171,17 @@ var MinimaxAI = /** @class */ (function () {
                     boards.push(board.clone());
                     boards[boards.length - 1].movePiece(pieces[i].matrixPosition, moves[j]);
                     this.Nodes.push(new MyNode(this.getBoardAbsoluteValue(boards[boards.length - 1].whitePieces, boards[boards.length - 1].blackPieces)));
+                    if (depth == 0) {
+                        this.RootNodeindex = this.Nodes.length;
+                    }
+                    else if (depth == 1) {
+                        this.Nodes[this.RootNodeindex].addSubNode(this.Nodes[this.Nodes.length - 1]);
+                        this.BranchNodeindex = this.Nodes.length;
+                    }
+                    else if (depth == 2) {
+                        this.Nodes[this.BranchNodeindex].addSubNode(this.Nodes[this.Nodes.length - 1]);
+                    }
+                    depth++;
                     this.createNewBoardsWithMoves(boards[boards.length - 1], depth, boards);
                 }
             }
@@ -198,6 +190,7 @@ var MinimaxAI = /** @class */ (function () {
     };
     MinimaxAI.prototype.makeMove = function () {
         var boards = [];
+        boards.push(this.board);
         this.createNewBoardsWithMoves(this.board, 0, boards);
         for (var i = 0; i < boards.length; i++) {
             console.log(this.getBoardAbsoluteValue(boards[i].blackPieces, boards[i].whitePieces));
