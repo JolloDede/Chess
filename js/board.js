@@ -89,6 +89,9 @@ var Board = /** @class */ (function () {
         var piece = this.getPieceAt(from.x, from.y);
         if (piece == null) {
             console.log(from.x + " " + from.y);
+            for (var i = 0; i < this.blackPieces.length; i++) {
+                console.log(this.blackPieces[i].matrixPosition.x + " " + this.blackPieces[i].matrixPosition.y);
+            }
         }
         piece.move(to.x, to.y, this);
     };
@@ -96,13 +99,13 @@ var Board = /** @class */ (function () {
         var clone = new Board();
         // Error
         for (var i = 0; i > this.whitePieces.length; i++) {
-            clone.whitePieces[i].x = this.whitePieces[i].x;
-            clone.whitePieces[i].y = this.whitePieces[i].y;
+            clone.whitePieces[i].matrixPosition.x = this.whitePieces[i].matrixPosition.x;
+            clone.whitePieces[i].matrixPosition.y = this.whitePieces[i].matrixPosition.y;
             clone.whitePieces[i].taken = this.whitePieces[i].taken;
         }
         for (var i = 0; i > this.blackPieces.length; i++) {
-            clone.blackPieces[i].x = this.blackPieces[i].x;
-            clone.blackPieces[i].y = this.blackPieces[i].y;
+            clone.blackPieces[i].matrixPosition.x = this.blackPieces[i].matrixPosition.x;
+            clone.blackPieces[i].matrixPosition.y = this.blackPieces[i].matrixPosition.y;
             clone.blackPieces[i].taken = this.blackPieces[i].taken;
         }
         return clone;
