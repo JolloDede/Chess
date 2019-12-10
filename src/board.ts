@@ -107,10 +107,14 @@ class Board {
         var clone = new Board();
         // Error
         for(var i = 0; i > this.whitePieces.length; i++){
-            clone.whitePieces.push(this.whitePieces[i]);
+            clone.whitePieces[i].x = this.whitePieces[i].x;
+            clone.whitePieces[i].y = this.whitePieces[i].y;
+            clone.whitePieces[i].taken = this.whitePieces[i].taken;
         }
         for(var i = 0; i > this.blackPieces.length; i++){
-            clone.blackPieces.push(this.blackPieces[i]);
+            clone.blackPieces[i].x = this.blackPieces[i].x;
+            clone.blackPieces[i].y = this.blackPieces[i].y;
+            clone.blackPieces[i].taken = this.blackPieces[i].taken;
         }
         return clone;
     }

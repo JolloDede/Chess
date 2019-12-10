@@ -23,8 +23,8 @@ function draw() {
         background(100);
         showGrid();
         board.show();
-        RandAI = new RandomAI(board);
         MinAI = new MinimaxAI(board);
+        RandAI = new RandomAI(board);
     }
 }
 function showGrid() {
