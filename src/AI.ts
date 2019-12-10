@@ -197,6 +197,7 @@ class MinimaxAI {
     createNewBoardsWithMoves(board: Board, depth: number, boards = []): void {
         let moves = [];
         let pieces: Piece[];
+        // Fix
         boards.push(board.clone());
         if(depth > 2){
             return;
