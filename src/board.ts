@@ -112,13 +112,12 @@ class Board {
         var clone = new Board();
         // Error
         var i:number
-        i = this.whitePieces.length;
-        for(i = 0; i > this.whitePieces.length; i++){
+        for(i = 0; i < this.whitePieces.length; i++){
             clone.whitePieces[i].matrixPosition.x = this.whitePieces[i].matrixPosition.x;
             clone.whitePieces[i].matrixPosition.y = this.whitePieces[i].matrixPosition.y;
             clone.whitePieces[i].taken = this.whitePieces[i].taken;
         }
-        for(i = 0; i > this.blackPieces.length; i++){
+        for(i = 0; i < this.blackPieces.length; i++){
             clone.blackPieces[i].matrixPosition.x = this.blackPieces[i].matrixPosition.x;
             clone.blackPieces[i].matrixPosition.y = this.blackPieces[i].matrixPosition.y;
             clone.blackPieces[i].taken = this.blackPieces[i].taken;

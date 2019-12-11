@@ -58,7 +58,7 @@ function mousePressed(event?: object): void {
             if (movingPiece != null) {
                 movingPiece.movingThisPiece = true;
                 // moving piece show moves
-                console.log(movingPiece.generateMoves(board));
+                // console.log(movingPiece.generateMoves(board));
             } else {
                 return;
             }
