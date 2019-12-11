@@ -155,20 +155,21 @@ var MinimaxAI = /** @class */ (function () {
         if (boards === void 0) { boards = []; }
         var moves = [];
         var pieces;
+        // Fix
+        boards.push(board.clone());
         if (depth > 2) {
             return;
         }
         if (depth % 2 == 0) {
-            pieces = board.blackPieces;
+            pieces = boards[boards.length - 1].blackPieces;
         }
         else {
-            pieces = board.whitePieces;
+            pieces = boards[boards.length - 1].whitePieces;
         }
         for (var i = 0; i < pieces.length; i++) {
             if (!pieces[i].taken) {
                 moves = pieces[i].generateMoves(board);
                 for (var j = 0; j < moves.length; j++) {
-                    boards.push(board.clone());
                     boards[boards.length - 1].movePiece(pieces[i].matrixPosition, moves[j]);
                     this.Nodes.push(new MyNode(this.getBoardAbsoluteValue(boards[boards.length - 1].whitePieces, boards[boards.length - 1].blackPieces)));
                     if (depth == 0) {
