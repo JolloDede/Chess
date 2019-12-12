@@ -99,7 +99,6 @@ var Board = /** @class */ (function () {
         var clone = new Board();
         // Error
         var i;
-        i = this.whitePieces.length;
         for (i = 0; i < this.whitePieces.length; i++) {
             clone.whitePieces[i].matrixPosition.x = this.whitePieces[i].matrixPosition.x;
             clone.whitePieces[i].matrixPosition.y = this.whitePieces[i].matrixPosition.y;
