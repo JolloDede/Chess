@@ -125,4 +125,12 @@ class Board {
         return clone;
     }
 
+    adjustBoards(dest: Board): void{
+      for(let i: number = 0; i < this.blackPieces.length; i++){
+        this.blackPieces[i].matrixPosition.x = dest.blackPieces[i].matrixPosition.x;
+        this.blackPieces[i].matrixPosition.y = dest.blackPieces[i].matrixPosition.y;
+        this.blackPieces[i].taken = dest.blackPieces[i].taken;
+      }
+    }
+
 }

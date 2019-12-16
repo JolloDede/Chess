@@ -245,6 +245,7 @@ class MinimaxAI {
     makeMove(): void {
         let boards: Board[];
         boards = [];
+        let bestMoveIndex: number;
         boards.push(this.board);
         this.Nodes.push(new MyNode(this.getBoardAbsoluteValue(this.board.whitePieces, this.board.blackPieces)));
         this.createNewBoardsWithMoves(this.board, boards);
@@ -253,7 +254,9 @@ class MinimaxAI {
             console.log("Child: " + str(this.Nodes[i].childNodes.length-1));
         }
         console.log(boards.length + " " + this.Nodes.length);
-        console.log(this.getBoardAbsoluteValue(boards[this.getBestMove()].blackPieces, boards[this.getBestMove()].whitePieces));
+        bestMoveIndex = this.getBestMove();
+        console.log(this.getBoardAbsoluteValue(boards[bestMoveIndex].blackPieces, boards[bestMoveIndex].whitePieces));
+        this.board.adjustBoards(boards[bestMoveIndex]);
     }
 
     getBestMove(): number {
@@ -289,7 +292,7 @@ class MinimaxAI {
             if(WorstNode == null){
                 WorstNode = Nodes[i];
             }
-            if(Nodes[i].value > WorstNode.value){
+            if(Nodes[i].value < WorstNode.value){
                 WorstNode = Nodes[i];
             }
         }

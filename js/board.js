@@ -111,5 +111,12 @@ var Board = /** @class */ (function () {
         }
         return clone;
     };
+    Board.prototype.adjustBoards = function (dest) {
+        for (var i = 0; i < this.blackPieces.length; i++) {
+            this.blackPieces[i].matrixPosition.x = dest.blackPieces[i].matrixPosition.x;
+            this.blackPieces[i].matrixPosition.y = dest.blackPieces[i].matrixPosition.y;
+            this.blackPieces[i].taken = dest.blackPieces[i].taken;
+        }
+    };
     return Board;
 }());
