@@ -253,10 +253,60 @@ class MinimaxAI {
             console.log("Child: " + str(this.Nodes[i].childNodes.length-1));
         }
         console.log(boards.length + " " + this.Nodes.length);
+        console.log(this.getBoardAbsoluteValue(boards[this.getBestMove()].blackPieces, boards[this.getBestMove()].whitePieces));
     }
 
-    getBestMove(): void {
+    getBestMove(): number {
+        var BestNodes: MyNode[] = [];
+        BestNodes.push(this.BestMove(true, this.Nodes[0].childNodes));
+        for(var i: number = 0; i < this.Nodes[0].childNodes.length; i++){
+            BestNodes.push(this.BestMove(false, this.Nodes[0].childNodes[i].childNodes));
+            for(var j: number = 0; j < this.Nodes[0].childNodes[i].childNodes.length; j++){
+                BestNodes.push(this.BestMove(true, this.Nodes[0].childNodes[i].childNodes[j].childNodes));
+            }
+        }
+        console.log("BestMove");
+        // for (let i = 0; i < BestNodes.length; i++) {
+        //     console.log(BestNodes[i].value);
+        // }
+        console.log(BestNodes[0].value);
+        return this.Nodes.indexOf(BestNodes[0]);
+    }
 
+    BestMove(max: boolean, Nodes: MyNode[]): MyNode{
+        let node: MyNode;
+        if(max){
+            node = this.maxFunc(Nodes);
+        }else{
+            node = this.minFunc(Nodes);
+        }
+        return node;
+    }
+
+    minFunc(Nodes: MyNode[]): MyNode{
+        let WorstNode: MyNode;
+        for(let i: number = 0; i < Nodes.length; i++){
+            if(WorstNode == null){
+                WorstNode = Nodes[i];
+            }
+            if(Nodes[i].value > WorstNode.value){
+                WorstNode = Nodes[i];
+            }
+        }
+        return WorstNode;
+    }
+
+    maxFunc(Nodes: MyNode[]): MyNode{
+        let GreatestNode: MyNode;
+        for(let i: number = 0; i < Nodes.length; i++){
+            if(GreatestNode == null){
+                GreatestNode = Nodes[i];
+            }
+            if(Nodes[i].value > GreatestNode.value){
+                GreatestNode = Nodes[i];
+            }
+        }
+        return GreatestNode;
     }
 
 }
