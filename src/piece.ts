@@ -4,10 +4,10 @@ abstract class Piece {
   taken: boolean;
   white: boolean;
   letter: string;
-  pic;
+  pic: any;
   movingThisPiece: boolean;
   value: number;
-  constructor(x: number, y: number, isWhite: boolean, letter: string, pic) {
+  constructor(x: number, y: number, isWhite: boolean, letter: string, pic: any) {
     this.matrixPosition = createVector(x, y);
     this.pixelPositon = createVector(x * tileSize + tileSize / 2, y * tileSize + tileSize / 2);
 

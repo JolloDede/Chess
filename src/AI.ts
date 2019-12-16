@@ -1,12 +1,12 @@
-class MyNode{
+class MyNode {
     value: number;
     childNodes: MyNode[];
-    constructor(value: number){
+    constructor(value: number) {
         this.value = value;
         this.childNodes = [];
     }
 
-    addSubNode(value: MyNode): void{
+    addSubNode(value: MyNode): void {
         this.childNodes.push(value);
     }
 
@@ -195,33 +195,68 @@ class MinimaxAI {
     RootNodeindex: number;
     BranchNodeindex: number;
     secondBranchNodeindex: number;
-    createNewBoardsWithMoves(board: Board, depth: number, boards: Board[]): void {
-        let moves: Vektor [];
+    // Recursion
+    createNewBoardsWithMoves(board: Board, boards: Board[]): void {
+        let moves: Vektor[];
         moves = [];
-        for(let i: number = 0; i < board.blackPieces.length; i++){
+        for (let i: number = 0; i < board.blackPieces.length; i++) {
             moves = board.blackPieces[i].generateMoves(board);
-            for(let j: number = 0; j < moves.length; j++){
+            for (let j: number = 0; j < moves.length; j++) {
                 boards.push(board.clone());
-                boards[boards.length-1].movePiece(board.blackPieces[i].matrixPosition, moves[j]);
-                this.Nodes.push(new MyNode(this.getBoardAbsoluteValue(boards[boards.length-1].blackPieces, boards[boards.length-1].whitePieces)));
+                boards[boards.length - 1].movePiece(board.blackPieces[i].matrixPosition, moves[j]);
+                this.Nodes.push(new MyNode(this.getBoardAbsoluteValue(boards[boards.length - 1].blackPieces, boards[boards.length - 1].whitePieces)));
+                this.Nodes[0].addSubNode(this.Nodes[this.Nodes.length-1]);
+                this.RootNodeindex = boards.length - 1;
+                this.createNewBoardsWithMovesA(boards[boards.length - 1], boards);
+            }
+        }
+    }
+    // Recursion
+    createNewBoardsWithMovesA(board: Board, boards: Board[]): void {
+        let moves: Vektor[];
+        moves = [];
+        for (let i: number = 0; i < board.whitePieces.length; i++) {
+            moves = board.blackPieces[i].generateMoves(board);
+            for (let j: number = 0; j < moves.length; j++) {
+                boards.push(board.clone());
+                boards[boards.length - 1].movePiece(board.whitePieces[i].matrixPosition, moves[j]);
+                this.Nodes.push(new MyNode(this.getBoardAbsoluteValue(boards[boards.length - 1].blackPieces, boards[boards.length - 1].whitePieces)));
+                this.Nodes[this.RootNodeindex].addSubNode(this.Nodes[this.Nodes.length - 1]);
+                this.BranchNodeindex = boards.length - 1;
+                this.createNewBoardsWithMovesB(boards[boards.length - 1], boards);
+            }
+        }
+    }
+    // Recursion
+    createNewBoardsWithMovesB(board: Board, boards: Board[]): void {
+        let moves: Vektor[];
+        moves = [];
+        for (let i: number = 0; i < board.blackPieces.length; i++) {
+            moves = board.blackPieces[i].generateMoves(board);
+            for (let j: number = 0; j < moves.length; j++) {
+                boards.push(board.clone());
+                boards[boards.length - 1].movePiece(board.blackPieces[i].matrixPosition, moves[j]);
+                this.Nodes.push(new MyNode(this.getBoardAbsoluteValue(boards[boards.length - 1].blackPieces, boards[boards.length - 1].whitePieces)));
+                this.Nodes[this.BranchNodeindex].addSubNode(this.Nodes[this.Nodes.length - 1]);
             }
         }
     }
 
-        makeMove(): void {
-            let boards: Board[];
-            boards = [];
-            boards.push(this.board);
-            this.Nodes.push(new MyNode(this.getBoardAbsoluteValue(this.board.whitePieces, this.board.blackPieces)));
-            this.createNewBoardsWithMoves(this.board, 0, boards);
-            for (var i = 0; i < boards.length; i++) {
-                console.log(this.getBoardAbsoluteValue(boards[i].blackPieces, boards[i].whitePieces));
-            }
-            console.log(boards.length + " " + this.Nodes.length);
+    makeMove(): void {
+        let boards: Board[];
+        boards = [];
+        boards.push(this.board);
+        this.Nodes.push(new MyNode(this.getBoardAbsoluteValue(this.board.whitePieces, this.board.blackPieces)));
+        this.createNewBoardsWithMoves(this.board, boards);
+        for (var i = 0; i < this.Nodes.length; i++) {
+            console.log(this.Nodes[i].value);
+            console.log("Child: " + str(this.Nodes[i].childNodes.length-1));
         }
+        console.log(boards.length + " " + this.Nodes.length);
+    }
 
-        getBestMove() {
-
-        }
+    getBestMove(): void {
 
     }
+
+}

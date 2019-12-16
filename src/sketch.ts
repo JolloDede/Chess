@@ -49,7 +49,7 @@ function showGrid(): void {
     }
 }
 var movingPiece: Piece;
-function mousePressed(event?: object): void {
+function mousePressed(): void {
     let x = floor(mouseX / tileSize);
     let y = floor(mouseY / tileSize);
     if (!board.isDone()) {

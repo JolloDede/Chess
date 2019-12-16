@@ -42,7 +42,7 @@ function showGrid() {
     }
 }
 var movingPiece;
-function mousePressed(event) {
+function mousePressed() {
     var x = floor(mouseX / tileSize);
     var y = floor(mouseY / tileSize);
     if (!board.isDone()) {
