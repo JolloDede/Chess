@@ -71,7 +71,7 @@ function mousePressed(): void {
                 //     console.log(i+1 + ": " + MinAI.getBoardAbsoluteValue(boards[i].blackPieces, boards[i].whitePieces));
                 // }
                 MinAI.makeMove();
-                RandAI.makeMove();
+                // RandAI.makeMove();
             }
             movingPiece.movingThisPiece = false;
         }

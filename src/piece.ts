@@ -146,7 +146,6 @@ class King extends Piece {
         }
       }
     }
-    // console.log(moves);
     return moves;
   }
 
@@ -192,7 +191,10 @@ class Queen extends Piece {
   }
 
   generateMoves(board: Board): Vektor[] {
-    var moves = [];
+    var moves:Vektor[] = [];
+    if(this.taken){
+        return moves;
+    }
     // Horizontal
     for (var i = 0; i < 8; i++) {
       var x: number = i;
@@ -285,7 +287,10 @@ class Rook extends Piece {
   }
 
   generateMoves(board: Board): Vektor[] {
-    var moves = [];
+    var moves: Vektor[] = [];
+    if(this.taken){
+        return moves;
+    }
     for (var i = 0; i < 8; i++) {
       var x: number = i;
       var y: number = this.matrixPosition.y;
@@ -348,7 +353,10 @@ class Bishop extends Piece {
   }
 
   generateMoves(board: Board): Vektor[] {
-    var moves = [];
+    var moves: Vektor[] = [];
+    if(this.taken){
+        return moves;
+    }
     for (var i = 0; i < 8; i++) {
       var x = i;
       var y = this.matrixPosition.y - (this.matrixPosition.x - i);
@@ -413,7 +421,10 @@ class Knigth extends Piece {
   }
 
   generateMoves(board: Board): Vektor[] {
-    var moves = [];
+    var moves: Vektor[] = [];
+    if(this.taken){
+        return moves;
+    }
     for (var i = -2; i < 3; i += 4) {
       for (var j = -1; j < 2; j += 2) {
         var x = this.matrixPosition.x + i;
@@ -509,9 +520,12 @@ class Pawn extends Piece {
   }
 
   generateMoves(board: Board): Vektor[] {
-    var moves = [];
+    var moves: Vektor[] = [];
     var x: number;
     var y: number;
+    if(this.taken){
+        return moves;
+    }
     for (var i = -1; i < 2; i += 2) {
       x = this.matrixPosition.x + i;
       if (this.white) {

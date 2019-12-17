@@ -1,6 +1,6 @@
 class Board {
-    whitePieces:Piece[];
-    blackPieces:Piece[];
+    whitePieces: Piece[];
+    blackPieces: Piece[];
     scoreWhite: number;
     scoreBlack: number;
     constructor() {
@@ -99,10 +99,10 @@ class Board {
 
     movePiece(from: Vektor, to: Vektor): void {
         var piece = this.getPieceAt(from.x, from.y);
-        if(piece == null){
-            console.log(from.x + " " +from.y);
-            for(var i = 0; i < this.blackPieces.length; i++){
-                console.log(this.blackPieces[i].matrixPosition.x + " " +this.blackPieces[i].matrixPosition.y);
+        if (piece == null) {
+            console.log(from.x + " " + from.y);
+            for (var i = 0; i < this.blackPieces.length; i++) {
+                console.log(this.blackPieces[i].matrixPosition.x + " " + this.blackPieces[i].matrixPosition.y);
             }
         }
         piece.move(to.x, to.y, this);
@@ -111,13 +111,13 @@ class Board {
     clone(): Board {
         var clone = new Board();
         // Error
-        var i:number
-        for(i = 0; i < this.whitePieces.length; i++){
+        var i: number
+        for (i = 0; i < this.whitePieces.length; i++) {
             clone.whitePieces[i].matrixPosition.x = this.whitePieces[i].matrixPosition.x;
             clone.whitePieces[i].matrixPosition.y = this.whitePieces[i].matrixPosition.y;
             clone.whitePieces[i].taken = this.whitePieces[i].taken;
         }
-        for(i = 0; i < this.blackPieces.length; i++){
+        for (i = 0; i < this.blackPieces.length; i++) {
             clone.blackPieces[i].matrixPosition.x = this.blackPieces[i].matrixPosition.x;
             clone.blackPieces[i].matrixPosition.y = this.blackPieces[i].matrixPosition.y;
             clone.blackPieces[i].taken = this.blackPieces[i].taken;
@@ -125,12 +125,12 @@ class Board {
         return clone;
     }
 
-    adjustBoards(dest: Board): void{
-      for(let i: number = 0; i < this.blackPieces.length; i++){
-        this.blackPieces[i].matrixPosition.x = dest.blackPieces[i].matrixPosition.x;
-        this.blackPieces[i].matrixPosition.y = dest.blackPieces[i].matrixPosition.y;
-        this.blackPieces[i].taken = dest.blackPieces[i].taken;
-      }
+    adjustBoards(dest: Board): void {
+        for (let i: number = 0; i < this.blackPieces.length; i++) {
+            if ((this.blackPieces[i].matrixPosition.x != dest.blackPieces[i].matrixPosition.x) || (this.blackPieces[i].matrixPosition.y != dest.blackPieces[i].matrixPosition.y)) {
+                this.movePiece(this.blackPieces[i].matrixPosition, dest.blackPieces[i].matrixPosition);
+            }
+        }
     }
 
 }

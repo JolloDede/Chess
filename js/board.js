@@ -113,9 +113,9 @@ var Board = /** @class */ (function () {
     };
     Board.prototype.adjustBoards = function (dest) {
         for (var i = 0; i < this.blackPieces.length; i++) {
-            this.blackPieces[i].matrixPosition.x = dest.blackPieces[i].matrixPosition.x;
-            this.blackPieces[i].matrixPosition.y = dest.blackPieces[i].matrixPosition.y;
-            this.blackPieces[i].taken = dest.blackPieces[i].taken;
+            if ((this.blackPieces[i].matrixPosition.x != dest.blackPieces[i].matrixPosition.x) || (this.blackPieces[i].matrixPosition.y != dest.blackPieces[i].matrixPosition.y)) {
+                this.movePiece(this.blackPieces[i].matrixPosition, dest.blackPieces[i].matrixPosition);
+            }
         }
     };
     return Board;
