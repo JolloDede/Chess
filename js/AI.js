@@ -214,20 +214,18 @@ var MinimaxAI = /** @class */ (function () {
         this.board.adjustBoards(boards[bestMoveIndex]);
     };
     MinimaxAI.prototype.getBestMove = function () {
-        var BestNodes = [];
-        BestNodes.push(this.BestMove(true, this.Nodes[0].childNodes));
-        // for(var i: number = 0; i < this.Nodes[0].childNodes.length; i++){
-        //     BestNodes.push(this.BestMove(false, this.Nodes[0].childNodes[i].childNodes));
-        //     for(var j: number = 0; j < this.Nodes[0].childNodes[i].childNodes.length; j++){
-        //         BestNodes.push(this.BestMove(true, this.Nodes[0].childNodes[i].childNodes[j].childNodes));
-        //     }
-        // }
+        var nodes = [];
+        for (var i = 0; i < this.Nodes[0].childNodes.length; i++) {
+            for (var j = 0; j < this.Nodes[0].childNodes[i].childNodes.length; j++) {
+                nodes = nodes.concat(this.BestMove(true, this.Nodes[0].childNodes[i].childNodes[j].childNodes));
+            }
+        }
+        nodes.push(this.BestMove(true, this.Nodes[0].childNodes));
         console.log("BestMove");
         // for (let i = 0; i < BestNodes.length; i++) {
         //     console.log(BestNodes[i].value);
         // }
-        console.log(BestNodes[0].value);
-        return this.Nodes.indexOf(BestNodes[0]);
+        return 0;
     };
     MinimaxAI.prototype.BestMove = function (max, Nodes) {
         var node;
