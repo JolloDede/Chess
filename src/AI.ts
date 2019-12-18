@@ -261,12 +261,13 @@ class MinimaxAI {
 
     getBestMove(): number {
         var nodes: MyNode[] = [];
+        var bestNode: MyNode;
         for(var i: number = 0; i < this.Nodes[0].childNodes.length; i++){
             for(var j: number = 0; j < this.Nodes[0].childNodes[i].childNodes.length; j++){
                 nodes = nodes.concat(this.BestMove(true, this.Nodes[0].childNodes[i].childNodes[j].childNodes));
             }
         }
-        nodes.push(this.BestMove(true, this.Nodes[0].childNodes));
+        bestNode = this.BestMove(false, nodes);
         console.log("BestMove");
         // for (let i = 0; i < BestNodes.length; i++) {
         //     console.log(BestNodes[i].value);
