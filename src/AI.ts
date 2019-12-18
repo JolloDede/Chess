@@ -1,6 +1,7 @@
 class MyNode {
     value: number;
     childNodes: MyNode[];
+    parentNode: MyNode;
     constructor(value: number) {
         this.value = value;
         this.childNodes = [];
@@ -206,6 +207,7 @@ class MinimaxAI {
                 boards[boards.length - 1].movePiece(board.blackPieces[i].matrixPosition, moves[j]);
                 this.Nodes.push(new MyNode(this.getBoardAbsoluteValue(boards[boards.length - 1].blackPieces, boards[boards.length - 1].whitePieces)));
                 this.Nodes[0].addSubNode(this.Nodes[this.Nodes.length-1]);
+                this.Nodes[this.Nodes.length-1].parentNode = this.Nodes[0];
                 this.RootNodeindex = boards.length - 1;
                 this.createNewBoardsWithMovesA(boards[boards.length - 1], boards);
             }
@@ -222,6 +224,7 @@ class MinimaxAI {
                 boards[boards.length - 1].movePiece(board.whitePieces[i].matrixPosition, moves[j]);
                 this.Nodes.push(new MyNode(this.getBoardAbsoluteValue(boards[boards.length - 1].blackPieces, boards[boards.length - 1].whitePieces)));
                 this.Nodes[this.RootNodeindex].addSubNode(this.Nodes[this.Nodes.length - 1]);
+                this.Nodes[this.Nodes.length-1].parentNode = this.Nodes[this.RootNodeindex];
                 this.BranchNodeindex = boards.length - 1;
                 this.createNewBoardsWithMovesB(boards[boards.length - 1], boards);
             }
@@ -238,6 +241,7 @@ class MinimaxAI {
                 boards[boards.length - 1].movePiece(board.blackPieces[i].matrixPosition, moves[j]);
                 this.Nodes.push(new MyNode(this.getBoardAbsoluteValue(boards[boards.length - 1].blackPieces, boards[boards.length - 1].whitePieces)));
                 this.Nodes[this.BranchNodeindex].addSubNode(this.Nodes[this.Nodes.length - 1]);
+                this.Nodes[this.Nodes.length-1].parentNode = this.Nodes[this.BranchNodeindex];
             }
         }
     }
