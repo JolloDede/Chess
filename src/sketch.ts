@@ -6,7 +6,7 @@ interface Vektor{
 var board: Board;
 var moving = false;
 var images = [];
-// let ctx;
+
 var RandAI: RandomAI;
 var MinAI: MinimaxAI;
 

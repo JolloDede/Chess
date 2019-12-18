@@ -193,7 +193,7 @@ class Queen extends Piece {
   generateMoves(board: Board): Vektor[] {
     var moves:Vektor[] = [];
     if(this.taken){
-        return moves;
+        return [];
     }
     // Horizontal
     for (var i = 0; i < 8; i++) {
@@ -289,7 +289,7 @@ class Rook extends Piece {
   generateMoves(board: Board): Vektor[] {
     var moves: Vektor[] = [];
     if(this.taken){
-        return moves;
+        return [];
     }
     for (var i = 0; i < 8; i++) {
       var x: number = i;
@@ -355,7 +355,7 @@ class Bishop extends Piece {
   generateMoves(board: Board): Vektor[] {
     var moves: Vektor[] = [];
     if(this.taken){
-        return moves;
+        return [];
     }
     for (var i = 0; i < 8; i++) {
       var x = i;
@@ -423,7 +423,7 @@ class Knigth extends Piece {
   generateMoves(board: Board): Vektor[] {
     var moves: Vektor[] = [];
     if(this.taken){
-        return moves;
+        return [];
     }
     for (var i = -2; i < 3; i += 4) {
       for (var j = -1; j < 2; j += 2) {
@@ -524,7 +524,7 @@ class Pawn extends Piece {
     var x: number;
     var y: number;
     if(this.taken){
-        return moves;
+        return [];
     }
     for (var i = -1; i < 2; i += 2) {
       x = this.matrixPosition.x + i;

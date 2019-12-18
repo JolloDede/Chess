@@ -172,7 +172,7 @@ var MinimaxAI = /** @class */ (function () {
         var moves;
         moves = [];
         for (var i = 0; i < board.whitePieces.length; i++) {
-            moves = board.blackPieces[i].generateMoves(board);
+            moves = board.whitePieces[i].generateMoves(board);
             for (var j = 0; j < moves.length; j++) {
                 boards.push(board.clone());
                 boards[boards.length - 1].movePiece(board.whitePieces[i].matrixPosition, moves[j]);
@@ -204,10 +204,10 @@ var MinimaxAI = /** @class */ (function () {
         boards.push(this.board);
         this.Nodes.push(new MyNode(this.getBoardAbsoluteValue(this.board.whitePieces, this.board.blackPieces)));
         this.createNewBoardsWithMoves(this.board, boards);
-        for (var i = 0; i < this.Nodes.length; i++) {
-            console.log(this.Nodes[i].value);
-            console.log("Child: " + str(this.Nodes[i].childNodes.length - 1));
-        }
+        // for (var i = 0; i < this.Nodes.length; i++) {
+        //     console.log(this.Nodes[i].value);
+        //     console.log("Child: " + str(this.Nodes[i].childNodes.length-1));
+        // }
         console.log(boards.length + " " + this.Nodes.length);
         bestMoveIndex = this.getBestMove();
         console.log(this.getBoardAbsoluteValue(boards[bestMoveIndex].blackPieces, boards[bestMoveIndex].whitePieces));
@@ -216,12 +216,12 @@ var MinimaxAI = /** @class */ (function () {
     MinimaxAI.prototype.getBestMove = function () {
         var BestNodes = [];
         BestNodes.push(this.BestMove(true, this.Nodes[0].childNodes));
-        for (var i = 0; i < this.Nodes[0].childNodes.length; i++) {
-            BestNodes.push(this.BestMove(false, this.Nodes[0].childNodes[i].childNodes));
-            for (var j = 0; j < this.Nodes[0].childNodes[i].childNodes.length; j++) {
-                BestNodes.push(this.BestMove(true, this.Nodes[0].childNodes[i].childNodes[j].childNodes));
-            }
-        }
+        // for(var i: number = 0; i < this.Nodes[0].childNodes.length; i++){
+        //     BestNodes.push(this.BestMove(false, this.Nodes[0].childNodes[i].childNodes));
+        //     for(var j: number = 0; j < this.Nodes[0].childNodes[i].childNodes.length; j++){
+        //         BestNodes.push(this.BestMove(true, this.Nodes[0].childNodes[i].childNodes[j].childNodes));
+        //     }
+        // }
         console.log("BestMove");
         // for (let i = 0; i < BestNodes.length; i++) {
         //     console.log(BestNodes[i].value);

@@ -91,13 +91,15 @@ var Board = /** @class */ (function () {
             console.log(from.x + " " + from.y);
             for (var i = 0; i < this.blackPieces.length; i++) {
                 console.log(this.blackPieces[i].matrixPosition.x + " " + this.blackPieces[i].matrixPosition.y);
+                this.getPieceAt(from.x, from.y);
             }
         }
-        piece.move(to.x, to.y, this);
+        if (piece.canMove(to.x, to.y, this)) {
+            piece.move(to.x, to.y, this);
+        }
     };
     Board.prototype.clone = function () {
         var clone = new Board();
-        // Error
         var i;
         for (i = 0; i < this.whitePieces.length; i++) {
             clone.whitePieces[i].matrixPosition.x = this.whitePieces[i].matrixPosition.x;

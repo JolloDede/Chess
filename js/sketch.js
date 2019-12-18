@@ -1,7 +1,6 @@
 var board;
 var moving = false;
 var images = [];
-// let ctx;
 var RandAI;
 var MinAI;
 var tileSize = 100;

@@ -191,7 +191,7 @@ var Queen = /** @class */ (function (_super) {
     Queen.prototype.generateMoves = function (board) {
         var moves = [];
         if (this.taken) {
-            return moves;
+            return [];
         }
         // Horizontal
         for (var i = 0; i < 8; i++) {
@@ -284,7 +284,7 @@ var Rook = /** @class */ (function (_super) {
     Rook.prototype.generateMoves = function (board) {
         var moves = [];
         if (this.taken) {
-            return moves;
+            return [];
         }
         for (var i = 0; i < 8; i++) {
             var x = i;
@@ -348,7 +348,7 @@ var Bishop = /** @class */ (function (_super) {
     Bishop.prototype.generateMoves = function (board) {
         var moves = [];
         if (this.taken) {
-            return moves;
+            return [];
         }
         for (var i = 0; i < 8; i++) {
             var x = i;
@@ -414,7 +414,7 @@ var Knigth = /** @class */ (function (_super) {
     Knigth.prototype.generateMoves = function (board) {
         var moves = [];
         if (this.taken) {
-            return moves;
+            return [];
         }
         for (var i = -2; i < 3; i += 4) {
             for (var j = -1; j < 2; j += 2) {
@@ -513,7 +513,7 @@ var Pawn = /** @class */ (function (_super) {
         var x;
         var y;
         if (this.taken) {
-            return moves;
+            return [];
         }
         for (var i = -1; i < 2; i += 2) {
             x = this.matrixPosition.x + i;
