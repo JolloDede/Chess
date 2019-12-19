@@ -1,7 +1,6 @@
 {
     "compilerOptions": {
         "outDir": "./js",
-        "allowJs": true,
         "target": "es6"
     },
     "include": [
