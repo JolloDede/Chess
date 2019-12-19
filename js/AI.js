@@ -1,6 +1,6 @@
 var MyNode = /** @class */ (function () {
-    function MyNode(value) {
-        this.value = value;
+    function MyNode() {
+        this.value;
         this.childNodes = [];
     }
     MyNode.prototype.addSubNode = function (value) {
@@ -160,8 +160,9 @@ var MinimaxAI = /** @class */ (function () {
             for (var j = 0; j < moves.length; j++) {
                 boards.push(board.clone());
                 boards[boards.length - 1].movePiece(board.blackPieces[i].matrixPosition, moves[j]);
-                this.Nodes.push(new MyNode(this.getBoardAbsoluteValue(boards[boards.length - 1].blackPieces, boards[boards.length - 1].whitePieces)));
+                this.Nodes.push(new MyNode());
                 this.Nodes[0].addSubNode(this.Nodes[this.Nodes.length - 1]);
+                this.Nodes[this.Nodes.length - 1].parentNode = this.Nodes[0];
                 this.RootNodeindex = boards.length - 1;
                 this.createNewBoardsWithMovesA(boards[boards.length - 1], boards);
             }
@@ -176,8 +177,9 @@ var MinimaxAI = /** @class */ (function () {
             for (var j = 0; j < moves.length; j++) {
                 boards.push(board.clone());
                 boards[boards.length - 1].movePiece(board.whitePieces[i].matrixPosition, moves[j]);
-                this.Nodes.push(new MyNode(this.getBoardAbsoluteValue(boards[boards.length - 1].blackPieces, boards[boards.length - 1].whitePieces)));
+                this.Nodes.push(new MyNode());
                 this.Nodes[this.RootNodeindex].addSubNode(this.Nodes[this.Nodes.length - 1]);
+                this.Nodes[this.Nodes.length - 1].parentNode = this.Nodes[this.RootNodeindex];
                 this.BranchNodeindex = boards.length - 1;
                 this.createNewBoardsWithMovesB(boards[boards.length - 1], boards);
             }
@@ -192,8 +194,10 @@ var MinimaxAI = /** @class */ (function () {
             for (var j = 0; j < moves.length; j++) {
                 boards.push(board.clone());
                 boards[boards.length - 1].movePiece(board.blackPieces[i].matrixPosition, moves[j]);
-                this.Nodes.push(new MyNode(this.getBoardAbsoluteValue(boards[boards.length - 1].blackPieces, boards[boards.length - 1].whitePieces)));
+                this.Nodes.push(new MyNode());
+                this.Nodes[this.Nodes.length - 1].value = this.getBoardAbsoluteValue(boards[boards.length - 1].blackPieces, boards[boards.length - 1].whitePieces);
                 this.Nodes[this.BranchNodeindex].addSubNode(this.Nodes[this.Nodes.length - 1]);
+                this.Nodes[this.Nodes.length - 1].parentNode = this.Nodes[this.BranchNodeindex];
             }
         }
     };
@@ -202,64 +206,45 @@ var MinimaxAI = /** @class */ (function () {
         boards = [];
         var bestMoveIndex;
         boards.push(this.board);
-        this.Nodes.push(new MyNode(this.getBoardAbsoluteValue(this.board.whitePieces, this.board.blackPieces)));
+        this.Nodes.push(new MyNode());
         this.createNewBoardsWithMoves(this.board, boards);
         // for (var i = 0; i < this.Nodes.length; i++) {
         //     console.log(this.Nodes[i].value);
         //     console.log("Child: " + str(this.Nodes[i].childNodes.length-1));
         // }
         console.log(boards.length + " " + this.Nodes.length);
-        bestMoveIndex = this.getBestMove();
-        console.log(this.getBoardAbsoluteValue(boards[bestMoveIndex].blackPieces, boards[bestMoveIndex].whitePieces));
-        this.board.adjustBoards(boards[bestMoveIndex]);
+        console.log(this.minimax(this.Nodes[0], 3, true), this.Nodes[0].value);
+        bestMoveIndex = this.getChildNodeIndexWithValue(this.Nodes[0]);
+        board.adjustBoards(boards[bestMoveIndex]);
     };
-    MinimaxAI.prototype.getBestMove = function () {
-        var nodes = [];
-        for (var i = 0; i < this.Nodes[0].childNodes.length; i++) {
-            for (var j = 0; j < this.Nodes[0].childNodes[i].childNodes.length; j++) {
-                nodes = nodes.concat(this.BestMove(true, this.Nodes[0].childNodes[i].childNodes[j].childNodes));
-            }
+    MinimaxAI.prototype.minimax = function (position, depth, maximizingPlayer) {
+        var value;
+        if (depth == 0) {
+            return position.value;
         }
-        nodes.push(this.BestMove(true, this.Nodes[0].childNodes));
-        console.log("BestMove");
-        // for (let i = 0; i < BestNodes.length; i++) {
-        //     console.log(BestNodes[i].value);
-        // }
-        return 0;
+        if (maximizingPlayer) {
+            value = -Infinity;
+            for (var i = 0; i < position.childNodes.length; i++) {
+                value = max(value, this.minimax(position.childNodes[i], depth - 1, false));
+            }
+            position.value = value;
+            return value;
+        }
+        else if (!maximizingPlayer) {
+            value = Infinity;
+            for (var i = 0; i < position.childNodes.length; i++) {
+                value = min(value, this.minimax(position.childNodes[i], depth - 1, true));
+            }
+            position.value = value;
+            return value;
+        }
     };
-    MinimaxAI.prototype.BestMove = function (max, Nodes) {
-        var node;
-        if (max) {
-            node = this.maxFunc(Nodes);
-        }
-        else {
-            node = this.minFunc(Nodes);
-        }
-        return node;
-    };
-    MinimaxAI.prototype.minFunc = function (Nodes) {
-        var WorstNode;
-        for (var i = 0; i < Nodes.length; i++) {
-            if (WorstNode == null) {
-                WorstNode = Nodes[i];
-            }
-            if (Nodes[i].value < WorstNode.value) {
-                WorstNode = Nodes[i];
+    MinimaxAI.prototype.getChildNodeIndexWithValue = function (node) {
+        for (var i = 0; i < node.childNodes.length; i++) {
+            if (node.childNodes[i].value == node.value) {
+                return this.Nodes.indexOf(node.childNodes[i]);
             }
         }
-        return WorstNode;
-    };
-    MinimaxAI.prototype.maxFunc = function (Nodes) {
-        var GreatestNode;
-        for (var i = 0; i < Nodes.length; i++) {
-            if (GreatestNode == null) {
-                GreatestNode = Nodes[i];
-            }
-            if (Nodes[i].value > GreatestNode.value) {
-                GreatestNode = Nodes[i];
-            }
-        }
-        return GreatestNode;
     };
     return MinimaxAI;
 }());

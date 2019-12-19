@@ -2,8 +2,8 @@ class MyNode {
     value: number;
     childNodes: MyNode[];
     parentNode: MyNode;
-    constructor(value: number) {
-        this.value = value;
+    constructor() {
+        this.value;
         this.childNodes = [];
     }
 
@@ -205,7 +205,7 @@ class MinimaxAI {
             for (let j: number = 0; j < moves.length; j++) {
                 boards.push(board.clone());
                 boards[boards.length - 1].movePiece(board.blackPieces[i].matrixPosition, moves[j]);
-                this.Nodes.push(new MyNode(this.getBoardAbsoluteValue(boards[boards.length - 1].blackPieces, boards[boards.length - 1].whitePieces)));
+                this.Nodes.push(new MyNode());
                 this.Nodes[0].addSubNode(this.Nodes[this.Nodes.length-1]);
                 this.Nodes[this.Nodes.length-1].parentNode = this.Nodes[0];
                 this.RootNodeindex = boards.length - 1;
@@ -222,7 +222,7 @@ class MinimaxAI {
             for (let j: number = 0; j < moves.length; j++) {
                 boards.push(board.clone());
                 boards[boards.length - 1].movePiece(board.whitePieces[i].matrixPosition, moves[j]);
-                this.Nodes.push(new MyNode(this.getBoardAbsoluteValue(boards[boards.length - 1].blackPieces, boards[boards.length - 1].whitePieces)));
+                this.Nodes.push(new MyNode());
                 this.Nodes[this.RootNodeindex].addSubNode(this.Nodes[this.Nodes.length - 1]);
                 this.Nodes[this.Nodes.length-1].parentNode = this.Nodes[this.RootNodeindex];
                 this.BranchNodeindex = boards.length - 1;
@@ -239,7 +239,8 @@ class MinimaxAI {
             for (let j: number = 0; j < moves.length; j++) {
                 boards.push(board.clone());
                 boards[boards.length - 1].movePiece(board.blackPieces[i].matrixPosition, moves[j]);
-                this.Nodes.push(new MyNode(this.getBoardAbsoluteValue(boards[boards.length - 1].blackPieces, boards[boards.length - 1].whitePieces)));
+                this.Nodes.push(new MyNode());
+                this.Nodes[this.Nodes.length-1].value = this.getBoardAbsoluteValue(boards[boards.length-1].blackPieces, boards[boards.length-1].whitePieces);
                 this.Nodes[this.BranchNodeindex].addSubNode(this.Nodes[this.Nodes.length - 1]);
                 this.Nodes[this.Nodes.length-1].parentNode = this.Nodes[this.BranchNodeindex];
             }
@@ -251,68 +252,46 @@ class MinimaxAI {
         boards = [];
         let bestMoveIndex: number;
         boards.push(this.board);
-        this.Nodes.push(new MyNode(this.getBoardAbsoluteValue(this.board.whitePieces, this.board.blackPieces)));
+        this.Nodes.push(new MyNode());
         this.createNewBoardsWithMoves(this.board, boards);
         // for (var i = 0; i < this.Nodes.length; i++) {
         //     console.log(this.Nodes[i].value);
         //     console.log("Child: " + str(this.Nodes[i].childNodes.length-1));
         // }
         console.log(boards.length + " " + this.Nodes.length);
-        bestMoveIndex = this.getBestMove();
-        console.log(this.getBoardAbsoluteValue(boards[bestMoveIndex].blackPieces, boards[bestMoveIndex].whitePieces));
-        this.board.adjustBoards(boards[bestMoveIndex]);
+        console.log(this.minimax(this.Nodes[0], 3, true), this.Nodes[0].value);
+        bestMoveIndex = this.getChildNodeIndexWithValue(this.Nodes[0]);
+        board.adjustBoards(boards[bestMoveIndex]);
     }
 
-    getBestMove(): number {
-        var nodes: MyNode[] = [];
-        var bestNode: MyNode;
-        for(var i: number = 0; i < this.Nodes[0].childNodes.length; i++){
-            for(var j: number = 0; j < this.Nodes[0].childNodes[i].childNodes.length; j++){
-                nodes = nodes.concat(this.BestMove(true, this.Nodes[0].childNodes[i].childNodes[j].childNodes));
-            }
+    minimax(position: MyNode, depth: number, maximizingPlayer: boolean): number{
+        let value: number;
+        if(depth == 0){
+            return position.value;
         }
-        bestNode = this.BestMove(false, nodes);
-        console.log("BestMove");
-        // for (let i = 0; i < BestNodes.length; i++) {
-        //     console.log(BestNodes[i].value);
-        // }
-        return 0;
+        if(maximizingPlayer){
+            value = -Infinity;
+            for (let i = 0; i < position.childNodes.length; i++) {
+                value = max(value, this.minimax(position.childNodes[i], depth -1, false));
+            }
+            position.value = value;
+            return value
+        }else if (!maximizingPlayer){
+            value = Infinity;
+            for (let i = 0; i < position.childNodes.length; i++) {
+                value = min(value, this.minimax(position.childNodes[i], depth - 1, true));
+            }
+            position.value = value;
+            return value;
+        }
     }
 
-    BestMove(max: boolean, Nodes: MyNode[]): MyNode{
-        let node: MyNode;
-        if(max){
-            node = this.maxFunc(Nodes);
-        }else{
-            node = this.minFunc(Nodes);
-        }
-        return node;
-    }
-
-    minFunc(Nodes: MyNode[]): MyNode{
-        let WorstNode: MyNode;
-        for(let i: number = 0; i < Nodes.length; i++){
-            if(WorstNode == null){
-                WorstNode = Nodes[i];
-            }
-            if(Nodes[i].value < WorstNode.value){
-                WorstNode = Nodes[i];
+    getChildNodeIndexWithValue(node: MyNode): number{
+        for (let i = 0; i < node.childNodes.length; i++) {
+            if(node.childNodes[i].value == node.value){
+                return this.Nodes.indexOf(node.childNodes[i]);
             }
         }
-        return WorstNode;
-    }
-
-    maxFunc(Nodes: MyNode[]): MyNode{
-        let GreatestNode: MyNode;
-        for(let i: number = 0; i < Nodes.length; i++){
-            if(GreatestNode == null){
-                GreatestNode = Nodes[i];
-            }
-            if(Nodes[i].value > GreatestNode.value){
-                GreatestNode = Nodes[i];
-            }
-        }
-        return GreatestNode;
     }
 
 }
