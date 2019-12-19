@@ -41,16 +41,14 @@ function showGrid() {
     }
 }
 var movingPiece;
-function mousePressed() {
-    var x = floor(mouseX / tileSize);
-    var y = floor(mouseY / tileSize);
+function mousePressed(event) {
+    let x = floor(mouseX / tileSize);
+    let y = floor(mouseY / tileSize);
     if (!board.isDone()) {
         if (!moving) {
             movingPiece = board.getPieceAt(x, y);
             if (movingPiece != null) {
                 movingPiece.movingThisPiece = true;
-                // moving piece show moves
-                // console.log(movingPiece.generateMoves(board));
             }
             else {
                 return;
@@ -60,10 +58,6 @@ function mousePressed() {
             if (movingPiece.canMove(x, y, board)) {
                 movingPiece.move(x, y, board);
                 console.log(MinAI.getBoardAbsoluteValue(this.board.blackPieces, this.board.whitePieces));
-                // var boards = MinAI.createNewBoardsWithMoves();
-                // for (var i = 0; i < boards.length; i++) {
-                //     console.log(i+1 + ": " + MinAI.getBoardAbsoluteValue(boards[i].blackPieces, boards[i].whitePieces));
-                // }
                 MinAI.makeMove();
                 // RandAI.makeMove();
             }

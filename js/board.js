@@ -1,12 +1,12 @@
-var Board = /** @class */ (function () {
-    function Board() {
+class Board {
+    constructor() {
         this.scoreWhite = 0;
         this.scoreBlack = 0;
         this.whitePieces = [];
         this.blackPieces = [];
         this.setupPieces();
     }
-    Board.prototype.setupPieces = function () {
+    setupPieces() {
         this.whitePieces.push(new King(4, 7, true));
         this.whitePieces.push(new Rook(0, 7, true));
         this.whitePieces.push(new Rook(7, 7, true));
@@ -29,16 +29,16 @@ var Board = /** @class */ (function () {
         for (var i = 0; i < 8; i++) {
             this.blackPieces.push(new Pawn(i, 1, false));
         }
-    };
-    Board.prototype.show = function () {
+    }
+    show() {
         for (var i = 0; i < this.whitePieces.length; i++) {
             this.whitePieces[i].show();
         }
         for (var i = 0; i < this.blackPieces.length; i++) {
             this.blackPieces[i].show();
         }
-    };
-    Board.prototype.pieceAt = function (x, y) {
+    }
+    pieceAt(x, y) {
         for (var i = 0; i < this.whitePieces.length; i++) {
             if (this.whitePieces[i].matrixPosition.x == x && this.whitePieces[i].matrixPosition.y == y) {
                 if (!this.whitePieces[i].taken) {
@@ -54,8 +54,8 @@ var Board = /** @class */ (function () {
             }
         }
         return false;
-    };
-    Board.prototype.getPieceAt = function (x, y) {
+    }
+    getPieceAt(x, y) {
         for (var i = 0; i < this.whitePieces.length; i++) {
             if (!this.whitePieces[i].taken && this.whitePieces[i].matrixPosition.x == x && this.whitePieces[i].matrixPosition.y == y) {
                 return this.whitePieces[i];
@@ -67,11 +67,11 @@ var Board = /** @class */ (function () {
             }
         }
         return null;
-    };
-    Board.prototype.isDone = function () {
+    }
+    isDone() {
         return this.whitePieces[0].taken || this.blackPieces[0].taken;
-    };
-    Board.prototype.setScore = function () {
+    }
+    setScore() {
         this.scoreWhite = 0;
         for (var i = 0; i < this.whitePieces.length; i++) {
             if (this.whitePieces[i].taken) {
@@ -84,8 +84,8 @@ var Board = /** @class */ (function () {
                 this.scoreBlack += this.blackPieces[i].value;
             }
         }
-    };
-    Board.prototype.movePiece = function (from, to) {
+    }
+    movePiece(from, to) {
         var piece = this.getPieceAt(from.x, from.y);
         if (piece == null) {
             console.log(from.x + " " + from.y);
@@ -97,8 +97,8 @@ var Board = /** @class */ (function () {
         if (piece.canMove(to.x, to.y, this)) {
             piece.move(to.x, to.y, this);
         }
-    };
-    Board.prototype.clone = function () {
+    }
+    clone() {
         var clone = new Board();
         var i;
         for (i = 0; i < this.whitePieces.length; i++) {
@@ -112,13 +112,12 @@ var Board = /** @class */ (function () {
             clone.blackPieces[i].taken = this.blackPieces[i].taken;
         }
         return clone;
-    };
-    Board.prototype.adjustBoards = function (dest) {
-        for (var i = 0; i < this.blackPieces.length; i++) {
+    }
+    adjustBoards(dest) {
+        for (let i = 0; i < this.blackPieces.length; i++) {
             if ((this.blackPieces[i].matrixPosition.x != dest.blackPieces[i].matrixPosition.x) || (this.blackPieces[i].matrixPosition.y != dest.blackPieces[i].matrixPosition.y)) {
                 this.movePiece(this.blackPieces[i].matrixPosition, dest.blackPieces[i].matrixPosition);
             }
         }
-    };
-    return Board;
-}());
+    }
+}

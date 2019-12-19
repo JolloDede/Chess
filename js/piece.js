@@ -1,18 +1,5 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var Piece = /** @class */ (function () {
-    function Piece(x, y, isWhite, letter, pic) {
+class Piece {
+    constructor(x, y, isWhite, letter, pic) {
         this.matrixPosition = createVector(x, y);
         this.pixelPositon = createVector(x * tileSize + tileSize / 2, y * tileSize + tileSize / 2);
         this.taken = false;
@@ -22,7 +9,7 @@ var Piece = /** @class */ (function () {
         this.movingThisPiece = false;
         this.value = 0;
     }
-    Piece.prototype.show = function () {
+    show() {
         if (!this.taken) {
             //textSize(40);
             //strokeWeight(10);
@@ -43,22 +30,22 @@ var Piece = /** @class */ (function () {
                 image(this.pic, this.pixelPositon.x - 50, this.pixelPositon.y - 50, tileSize, tileSize);
             }
         }
-    };
-    Piece.prototype.move = function (x, y, board) {
+    }
+    move(x, y, board) {
         var attacking = board.getPieceAt(x, y);
         if (attacking != null) {
             attacking.taken = true;
         }
         this.matrixPosition = createVector(x, y);
         this.pixelPositon = createVector(x * tileSize + tileSize / 2, y * tileSize + tileSize / 2);
-    };
-    Piece.prototype.withinBounds = function (x, y) {
+    }
+    withinBounds(x, y) {
         if (x >= 0 && y >= 0 && x < 8 && y < 8) {
             return true;
         }
         return false;
-    };
-    Piece.prototype.attackingAllies = function (x, y, board) {
+    }
+    attackingAllies(x, y, board) {
         var attacking = board.getPieceAt(x, y);
         if (attacking != null) {
             if (attacking.white == this.white) {
@@ -66,8 +53,8 @@ var Piece = /** @class */ (function () {
             }
         }
         return false;
-    };
-    Piece.prototype.moveTroughPieces = function (x, y, board) {
+    }
+    moveTroughPieces(x, y, board) {
         var stepDirectionX = x - this.matrixPosition.x;
         if (stepDirectionX > 0) {
             stepDirectionX = 1;
@@ -96,8 +83,8 @@ var Piece = /** @class */ (function () {
             tempPos.y += stepDirectionY;
         }
         return false;
-    };
-    Piece.prototype.generateNewBoards = function (currentBoard) {
+    }
+    generateNewBoards(currentBoard) {
         var boards;
         var moves = this.generateMoves(currentBoard);
         for (var i = 0; i < moves.length; i++) {
@@ -105,23 +92,20 @@ var Piece = /** @class */ (function () {
             boards[i].movePiece(this.matrixPosition, moves[i]);
         }
         return boards;
-    };
-    return Piece;
-}());
-var King = /** @class */ (function (_super) {
-    __extends(King, _super);
-    function King(x, y, isWhite) {
-        var _this = _super.call(this, x, y, isWhite, "K", null) || this;
+    }
+}
+class King extends Piece {
+    constructor(x, y, isWhite) {
+        super(x, y, isWhite, "K", null);
         if (isWhite) {
-            _this.pic = images[0];
+            this.pic = images[0];
         }
         else {
-            _this.pic = images[6];
+            this.pic = images[6];
         }
-        _this.value = 99;
-        return _this;
+        this.value = 99;
     }
-    King.prototype.canMove = function (x, y, board) {
+    canMove(x, y, board) {
         if (!this.withinBounds(x, y)) {
             return false;
         }
@@ -131,8 +115,8 @@ var King = /** @class */ (function (_super) {
         if (abs(x - this.matrixPosition.x) <= 1 && abs(y - this.matrixPosition.y) <= 1) {
             return true;
         }
-    };
-    King.prototype.generateMoves = function (board) {
+    }
+    generateMoves(board) {
         var moves = [];
         for (var i = -1; i < 2; i++) {
             for (var j = -1; j < 2; j++) {
@@ -146,28 +130,25 @@ var King = /** @class */ (function (_super) {
             }
         }
         return moves;
-    };
-    King.prototype.clone = function () {
+    }
+    clone() {
         var cloneKing = new King(this.matrixPosition.x, this.matrixPosition.y, this.white);
         cloneKing.taken = this.taken;
         return cloneKing;
-    };
-    return King;
-}(Piece));
-var Queen = /** @class */ (function (_super) {
-    __extends(Queen, _super);
-    function Queen(x, y, isWhite) {
-        var _this = _super.call(this, x, y, isWhite, "Q", null) || this;
+    }
+}
+class Queen extends Piece {
+    constructor(x, y, isWhite) {
+        super(x, y, isWhite, "Q", null);
         if (isWhite) {
-            _this.pic = images[1];
+            this.pic = images[1];
         }
         else {
-            _this.pic = images[7];
+            this.pic = images[7];
         }
-        _this.value = 9;
-        return _this;
+        this.value = 9;
     }
-    Queen.prototype.canMove = function (x, y, board) {
+    canMove(x, y, board) {
         if (!this.withinBounds(x, y)) {
             return false;
         }
@@ -187,8 +168,8 @@ var Queen = /** @class */ (function (_super) {
             return true;
         }
         return false;
-    };
-    Queen.prototype.generateMoves = function (board) {
+    }
+    generateMoves(board) {
         var moves = [];
         if (this.taken) {
             return [];
@@ -245,28 +226,25 @@ var Queen = /** @class */ (function (_super) {
             }
         }
         return moves;
-    };
-    Queen.prototype.clone = function () {
+    }
+    clone() {
         var cloneQueen = new Queen(this.matrixPosition.x, this.matrixPosition.y, this.white);
         cloneQueen.taken = this.taken;
         return cloneQueen;
-    };
-    return Queen;
-}(Piece));
-var Rook = /** @class */ (function (_super) {
-    __extends(Rook, _super);
-    function Rook(x, y, isWhite) {
-        var _this = _super.call(this, x, y, isWhite, "R", null) || this;
+    }
+}
+class Rook extends Piece {
+    constructor(x, y, isWhite) {
+        super(x, y, isWhite, "R", null);
         if (isWhite) {
-            _this.pic = images[4];
+            this.pic = images[4];
         }
         else {
-            _this.pic = images[10];
+            this.pic = images[10];
         }
-        _this.value = 5;
-        return _this;
+        this.value = 5;
     }
-    Rook.prototype.canMove = function (x, y, board) {
+    canMove(x, y, board) {
         if (!this.withinBounds(x, y)) {
             return false;
         }
@@ -280,8 +258,8 @@ var Rook = /** @class */ (function (_super) {
             return true;
         }
         return false;
-    };
-    Rook.prototype.generateMoves = function (board) {
+    }
+    generateMoves(board) {
         var moves = [];
         if (this.taken) {
             return [];
@@ -309,28 +287,25 @@ var Rook = /** @class */ (function (_super) {
             }
         }
         return moves;
-    };
-    Rook.prototype.clone = function () {
+    }
+    clone() {
         var cloneRook = new Rook(this.matrixPosition.x, this.matrixPosition.y, this.white);
         cloneRook.taken = this.taken;
         return cloneRook;
-    };
-    return Rook;
-}(Piece));
-var Bishop = /** @class */ (function (_super) {
-    __extends(Bishop, _super);
-    function Bishop(x, y, isWhite) {
-        var _this = _super.call(this, x, y, isWhite, "B", null) || this;
+    }
+}
+class Bishop extends Piece {
+    constructor(x, y, isWhite) {
+        super(x, y, isWhite, "B", null);
         if (isWhite) {
-            _this.pic = images[2];
+            this.pic = images[2];
         }
         else {
-            _this.pic = images[8];
+            this.pic = images[8];
         }
-        _this.value = 3;
-        return _this;
+        this.value = 3;
     }
-    Bishop.prototype.canMove = function (x, y, board) {
+    canMove(x, y, board) {
         if (!this.withinBounds(x, y)) {
             return false;
         }
@@ -344,8 +319,8 @@ var Bishop = /** @class */ (function (_super) {
             return true;
         }
         return false;
-    };
-    Bishop.prototype.generateMoves = function (board) {
+    }
+    generateMoves(board) {
         var moves = [];
         if (this.taken) {
             return [];
@@ -377,28 +352,25 @@ var Bishop = /** @class */ (function (_super) {
             }
         }
         return moves;
-    };
-    Bishop.prototype.clone = function () {
+    }
+    clone() {
         var cloneBishop = new Bishop(this.matrixPosition.x, this.matrixPosition.y, this.white);
         cloneBishop.taken = this.taken;
         return cloneBishop;
-    };
-    return Bishop;
-}(Piece));
-var Knigth = /** @class */ (function (_super) {
-    __extends(Knigth, _super);
-    function Knigth(x, y, isWhite) {
-        var _this = _super.call(this, x, y, isWhite, "Kn", null) || this;
+    }
+}
+class Knigth extends Piece {
+    constructor(x, y, isWhite) {
+        super(x, y, isWhite, "Kn", null);
         if (isWhite) {
-            _this.pic = images[3];
+            this.pic = images[3];
         }
         else {
-            _this.pic = images[9];
+            this.pic = images[9];
         }
-        _this.value = 3;
-        return _this;
+        this.value = 3;
     }
-    Knigth.prototype.canMove = function (x, y, board) {
+    canMove(x, y, board) {
         if (!this.withinBounds(x, y)) {
             return false;
         }
@@ -410,8 +382,8 @@ var Knigth = /** @class */ (function (_super) {
             return true;
         }
         return false;
-    };
-    Knigth.prototype.generateMoves = function (board) {
+    }
+    generateMoves(board) {
         var moves = [];
         if (this.taken) {
             return [];
@@ -439,29 +411,26 @@ var Knigth = /** @class */ (function (_super) {
             }
         }
         return moves;
-    };
-    Knigth.prototype.clone = function () {
+    }
+    clone() {
         var cloneKnight = new Knigth(this.matrixPosition.x, this.matrixPosition.y, this.white);
         cloneKnight.taken = this.taken;
         return cloneKnight;
-    };
-    return Knigth;
-}(Piece));
-var Pawn = /** @class */ (function (_super) {
-    __extends(Pawn, _super);
-    function Pawn(x, y, isWhite) {
-        var _this = _super.call(this, x, y, isWhite, "p", null) || this;
-        _this.firstTurn = true;
+    }
+}
+class Pawn extends Piece {
+    constructor(x, y, isWhite) {
+        super(x, y, isWhite, "p", null);
+        this.firstTurn = true;
         if (isWhite) {
-            _this.pic = images[5];
+            this.pic = images[5];
         }
         else {
-            _this.pic = images[11];
+            this.pic = images[11];
         }
-        _this.value = 1;
-        return _this;
+        this.value = 1;
     }
-    Pawn.prototype.canMove = function (x, y, board) {
+    canMove(x, y, board) {
         if (!this.withinBounds(x, y)) {
             return false;
         }
@@ -507,8 +476,8 @@ var Pawn = /** @class */ (function (_super) {
             }
         }
         return false;
-    };
-    Pawn.prototype.generateMoves = function (board) {
+    }
+    generateMoves(board) {
         var moves = [];
         var x;
         var y;
@@ -555,12 +524,11 @@ var Pawn = /** @class */ (function (_super) {
             }
         }
         return moves;
-    };
-    Pawn.prototype.clone = function () {
+    }
+    clone() {
         var clonePawn = new Pawn(this.matrixPosition.x, this.matrixPosition.y, this.white);
         clonePawn.taken = this.taken;
         clonePawn.firstTurn = this.firstTurn;
         return clonePawn;
-    };
-    return Pawn;
-}(Piece));
+    }
+}

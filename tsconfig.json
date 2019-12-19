@@ -2,11 +2,11 @@
     "compilerOptions": {
         "outDir": "./js",
         "allowJs": true,
-        "target": "es5"
+        "target": "es6"
     },
     "include": [
         "./src/**/*",
-        "./typings/**/*"
+        "./node_modules/@types/**/*"
     ],
     "typeRoots": [
         "./typings"

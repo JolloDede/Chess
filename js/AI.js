@@ -1,21 +1,20 @@
-var MyNode = /** @class */ (function () {
-    function MyNode() {
+class MyNode {
+    constructor() {
         this.value;
         this.childNodes = [];
     }
-    MyNode.prototype.addSubNode = function (value) {
+    addSubNode(value) {
         this.childNodes.push(value);
-    };
-    return MyNode;
-}());
-var RandomAI = /** @class */ (function () {
-    function RandomAI(board) {
+    }
+}
+class RandomAI {
+    constructor(board) {
         this.pieces = board.blackPieces;
         this.board = board;
     }
-    RandomAI.prototype.makeMove = function () {
-        var piecesP = this.pieces;
-        var moves = [];
+    makeMove() {
+        let piecesP = this.pieces;
+        let moves = [];
         this.pieces = [];
         for (var i = 0; i < piecesP.length; i++) {
             if (!piecesP[i].taken) {
@@ -38,9 +37,8 @@ var RandomAI = /** @class */ (function () {
         } while (moves.length < 1);
         var m = Math.floor((Math.random() * moves.length) + 0);
         piece.move(moves[m].x, moves[m].y, this.board);
-    };
-    return RandomAI;
-}());
+    }
+}
 function reverseArray(array) {
     return array.slice().reverse();
 }
@@ -125,14 +123,14 @@ function getPieceAbsoluteValue(piece) {
         default:
     }
 }
-var MinimaxAI = /** @class */ (function () {
-    function MinimaxAI(board) {
+class MinimaxAI {
+    constructor(board) {
         this.board = board;
         this.pieces = board.blackPieces;
         this.Nodes = [];
     }
-    MinimaxAI.prototype.getBoardAbsoluteValue = function (allyPieces, enemyPieces) {
-        var value = 0;
+    getBoardAbsoluteValue(allyPieces, enemyPieces) {
+        let value = 0;
         for (var i = 0; i < allyPieces.length; i++) {
             if (allyPieces[i].taken) {
                 value -= allyPieces[i].value;
@@ -150,14 +148,14 @@ var MinimaxAI = /** @class */ (function () {
             }
         }
         return value;
-    };
+    }
     // Recursion
-    MinimaxAI.prototype.createNewBoardsWithMoves = function (board, boards) {
-        var moves;
+    createNewBoardsWithMoves(board, boards) {
+        let moves;
         moves = [];
-        for (var i = 0; i < board.blackPieces.length; i++) {
+        for (let i = 0; i < board.blackPieces.length; i++) {
             moves = board.blackPieces[i].generateMoves(board);
-            for (var j = 0; j < moves.length; j++) {
+            for (let j = 0; j < moves.length; j++) {
                 boards.push(board.clone());
                 boards[boards.length - 1].movePiece(board.blackPieces[i].matrixPosition, moves[j]);
                 this.Nodes.push(new MyNode());
@@ -167,14 +165,14 @@ var MinimaxAI = /** @class */ (function () {
                 this.createNewBoardsWithMovesA(boards[boards.length - 1], boards);
             }
         }
-    };
+    }
     // Recursion
-    MinimaxAI.prototype.createNewBoardsWithMovesA = function (board, boards) {
-        var moves;
+    createNewBoardsWithMovesA(board, boards) {
+        let moves;
         moves = [];
-        for (var i = 0; i < board.whitePieces.length; i++) {
+        for (let i = 0; i < board.whitePieces.length; i++) {
             moves = board.whitePieces[i].generateMoves(board);
-            for (var j = 0; j < moves.length; j++) {
+            for (let j = 0; j < moves.length; j++) {
                 boards.push(board.clone());
                 boards[boards.length - 1].movePiece(board.whitePieces[i].matrixPosition, moves[j]);
                 this.Nodes.push(new MyNode());
@@ -184,14 +182,14 @@ var MinimaxAI = /** @class */ (function () {
                 this.createNewBoardsWithMovesB(boards[boards.length - 1], boards);
             }
         }
-    };
+    }
     // Recursion
-    MinimaxAI.prototype.createNewBoardsWithMovesB = function (board, boards) {
-        var moves;
+    createNewBoardsWithMovesB(board, boards) {
+        let moves;
         moves = [];
-        for (var i = 0; i < board.blackPieces.length; i++) {
+        for (let i = 0; i < board.blackPieces.length; i++) {
             moves = board.blackPieces[i].generateMoves(board);
-            for (var j = 0; j < moves.length; j++) {
+            for (let j = 0; j < moves.length; j++) {
                 boards.push(board.clone());
                 boards[boards.length - 1].movePiece(board.blackPieces[i].matrixPosition, moves[j]);
                 this.Nodes.push(new MyNode());
@@ -200,11 +198,11 @@ var MinimaxAI = /** @class */ (function () {
                 this.Nodes[this.Nodes.length - 1].parentNode = this.Nodes[this.BranchNodeindex];
             }
         }
-    };
-    MinimaxAI.prototype.makeMove = function () {
-        var boards;
+    }
+    makeMove() {
+        let boards;
         boards = [];
-        var bestMoveIndex;
+        let bestMoveIndex;
         boards.push(this.board);
         this.Nodes.push(new MyNode());
         this.createNewBoardsWithMoves(this.board, boards);
@@ -216,15 +214,15 @@ var MinimaxAI = /** @class */ (function () {
         console.log(this.minimax(this.Nodes[0], 3, true), this.Nodes[0].value);
         bestMoveIndex = this.getChildNodeIndexWithValue(this.Nodes[0]);
         board.adjustBoards(boards[bestMoveIndex]);
-    };
-    MinimaxAI.prototype.minimax = function (position, depth, maximizingPlayer) {
-        var value;
+    }
+    minimax(position, depth, maximizingPlayer) {
+        let value;
         if (depth == 0) {
             return position.value;
         }
         if (maximizingPlayer) {
             value = -Infinity;
-            for (var i = 0; i < position.childNodes.length; i++) {
+            for (let i = 0; i < position.childNodes.length; i++) {
                 value = max(value, this.minimax(position.childNodes[i], depth - 1, false));
             }
             position.value = value;
@@ -232,19 +230,18 @@ var MinimaxAI = /** @class */ (function () {
         }
         else if (!maximizingPlayer) {
             value = Infinity;
-            for (var i = 0; i < position.childNodes.length; i++) {
+            for (let i = 0; i < position.childNodes.length; i++) {
                 value = min(value, this.minimax(position.childNodes[i], depth - 1, true));
             }
             position.value = value;
             return value;
         }
-    };
-    MinimaxAI.prototype.getChildNodeIndexWithValue = function (node) {
-        for (var i = 0; i < node.childNodes.length; i++) {
+    }
+    getChildNodeIndexWithValue(node) {
+        for (let i = 0; i < node.childNodes.length; i++) {
             if (node.childNodes[i].value == node.value) {
                 return this.Nodes.indexOf(node.childNodes[i]);
             }
         }
-    };
-    return MinimaxAI;
-}());
+    }
+}
