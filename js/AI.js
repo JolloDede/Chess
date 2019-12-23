@@ -123,6 +123,7 @@ function getPieceAbsoluteValue(piece) {
         default:
     }
 }
+const maxDepth = 3;
 class MinimaxAI {
     constructor(board) {
         this.board = board;
@@ -199,17 +200,51 @@ class MinimaxAI {
             }
         }
     }
+    createNewBoardsWithMovesRecursiv(board, boards, depth) {
+        let moves = [];
+        let pieces;
+        if (depth == maxDepth) {
+            return;
+        }
+        if (depth % 2 == 0) {
+            pieces = board.blackPieces;
+        }
+        else {
+            pieces = board.whitePieces;
+        }
+        for (let i = 0; i < pieces.length; i++) {
+            moves = pieces[i].generateMoves(board);
+            for (let j = 0; j < moves.length; j++) {
+                boards.push(board.clone());
+                boards[boards.length - 1].movePiece(pieces[i].matrixPosition, moves[j]);
+                this.Nodes.push(new MyNode());
+                if (depth == 0) {
+                    this.Nodes[0].addSubNode(this.Nodes[this.Nodes.length - 1]);
+                    this.Nodes[this.Nodes.length - 1].parentNode = this.Nodes[0];
+                    this.RootNodeindex = boards.length - 1;
+                }
+                if (depth == 1) {
+                    this.Nodes[this.RootNodeindex].addSubNode(this.Nodes[this.Nodes.length - 1]);
+                    this.Nodes[this.Nodes.length - 1].parentNode = this.Nodes[this.RootNodeindex];
+                    this.BranchNodeindex = boards.length - 1;
+                }
+                if (depth == maxDepth - 1) {
+                    this.Nodes[this.Nodes.length - 1].value = this.getBoardAbsoluteValue(boards[boards.length - 1].blackPieces, boards[boards.length - 1].whitePieces);
+                    this.Nodes[this.BranchNodeindex].addSubNode(this.Nodes[this.Nodes.length - 1]);
+                    this.Nodes[this.Nodes.length - 1].parentNode = this.Nodes[this.BranchNodeindex];
+                }
+                this.createNewBoardsWithMovesRecursiv(boards[boards.length - 1], boards, depth + 1);
+            }
+        }
+    }
     makeMove() {
         let boards;
         boards = [];
         let bestMoveIndex;
         boards.push(this.board);
         this.Nodes.push(new MyNode());
-        this.createNewBoardsWithMoves(this.board, boards);
-        // for (var i = 0; i < this.Nodes.length; i++) {
-        //     console.log(this.Nodes[i].value);
-        //     console.log("Child: " + str(this.Nodes[i].childNodes.length-1));
-        // }
+        // this.createNewBoardsWithMoves(this.board, boards);
+        this.createNewBoardsWithMovesRecursiv(this.board, boards, 0);
         console.log(boards.length + " " + this.Nodes.length);
         console.log(this.minimax(this.Nodes[0], 3, true), this.Nodes[0].value);
         bestMoveIndex = this.getChildNodeIndexWithValue(this.Nodes[0]);
