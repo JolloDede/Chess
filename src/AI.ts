@@ -144,7 +144,9 @@ function getPieceAbsoluteValue(piece: Piece): number {
         default:
     }
 }
-const maxDepth = 3;
+
+const maxDepth = 4;
+
 class MinimaxAI {
     board: Board;
     pieces: Piece[];
