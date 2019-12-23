@@ -147,8 +147,12 @@ function getPieceAbsoluteValue(piece: Piece): number {
 const maxDepth = 3;
 class MinimaxAI {
     board: Board;
-    pieces: Array<Piece>;
+    pieces: Piece[];
     Nodes: MyNode[];
+
+    RootNodeindex: number;
+    BranchNodeindex: number;
+    secondBranchNodeindex: number;
 
     constructor(board: Board) {
         this.board = board;
@@ -194,9 +198,7 @@ class MinimaxAI {
     //     }
     //     return moves;
     // }
-    RootNodeindex: number;
-    BranchNodeindex: number;
-    secondBranchNodeindex: number;
+
     // // Recursion
     // createNewBoardsWithMoves(board: Board, boards: Board[]): void {
     //     let moves: Vektor[];
@@ -248,41 +250,41 @@ class MinimaxAI {
     //     }
     // }
 
-    createNewBoardsWithMovesRecursiv(board: Board, boards: Board[], depth: number): void{
-            let moves: Vektor[] = [];
-            let pieces: Piece[];
-            if(depth == maxDepth){
-                return;
-            }
-            if(depth%2==0){
-                pieces = board.blackPieces;
-            }else{
-                pieces = board.whitePieces;
-            }
-            for (let i = 0; i < pieces.length; i++) {
-                moves = pieces[i].generateMoves(board);
-                for (let j = 0; j < moves.length; j++) {
-                    boards.push(board.clone());
-                    boards[boards.length - 1].movePiece(pieces[i].matrixPosition, moves[j]);
-                    this.Nodes.push(new MyNode());
-                    if(depth == 0){
-                        this.Nodes[0].addSubNode(this.Nodes[this.Nodes.length-1]);
-                        this.Nodes[this.Nodes.length-1].parentNode = this.Nodes[0];
-                        this.RootNodeindex = boards.length - 1;
-                    }
-                    if(depth == 1){
-                        this.Nodes[this.RootNodeindex].addSubNode(this.Nodes[this.Nodes.length - 1]);
-                        this.Nodes[this.Nodes.length-1].parentNode = this.Nodes[this.RootNodeindex];
-                        this.BranchNodeindex = boards.length - 1;
-                    }
-                    if(depth == maxDepth-1){
-                        this.Nodes[this.Nodes.length-1].value = this.getBoardAbsoluteValue(boards[boards.length-1].blackPieces, boards[boards.length-1].whitePieces);
-                        this.Nodes[this.BranchNodeindex].addSubNode(this.Nodes[this.Nodes.length - 1]);
-                        this.Nodes[this.Nodes.length-1].parentNode = this.Nodes[this.BranchNodeindex];
-                    }
-                    this.createNewBoardsWithMovesRecursiv(boards[boards.length - 1], boards, depth+1);
+    createNewBoardsWithMovesRecursiv(board: Board, boards: Board[], depth: number): void {
+        let moves: Vektor[] = [];
+        let pieces: Piece[];
+        if (depth == maxDepth) {
+            return;
+        }
+        if (depth % 2 == 0) {
+            pieces = board.blackPieces;
+        } else {
+            pieces = board.whitePieces;
+        }
+        for (let i = 0; i < pieces.length; i++) {
+            moves = pieces[i].generateMoves(board);
+            for (let j = 0; j < moves.length; j++) {
+                boards.push(board.clone());
+                boards[boards.length - 1].movePiece(pieces[i].matrixPosition, moves[j]);
+                this.Nodes.push(new MyNode());
+                if (depth == 0) {
+                    this.Nodes[0].addSubNode(this.Nodes[this.Nodes.length - 1]);
+                    this.Nodes[this.Nodes.length - 1].parentNode = this.Nodes[0];
+                    this.RootNodeindex = boards.length - 1;
                 }
+                if (depth == 1) {
+                    this.Nodes[this.RootNodeindex].addSubNode(this.Nodes[this.Nodes.length - 1]);
+                    this.Nodes[this.Nodes.length - 1].parentNode = this.Nodes[this.RootNodeindex];
+                    this.BranchNodeindex = boards.length - 1;
+                }
+                if (depth == maxDepth - 1) {
+                    this.Nodes[this.Nodes.length - 1].value = this.getBoardAbsoluteValue(boards[boards.length - 1].blackPieces, boards[boards.length - 1].whitePieces);
+                    this.Nodes[this.BranchNodeindex].addSubNode(this.Nodes[this.Nodes.length - 1]);
+                    this.Nodes[this.Nodes.length - 1].parentNode = this.Nodes[this.BranchNodeindex];
+                }
+                this.createNewBoardsWithMovesRecursiv(boards[boards.length - 1], boards, depth + 1);
             }
+        }
     }
 
     makeMove(): void {
@@ -299,19 +301,19 @@ class MinimaxAI {
         board.adjustBoards(boards[bestMoveIndex]);
     }
 
-    minimax(position: MyNode, depth: number, maximizingPlayer: boolean): number{
+    minimax(position: MyNode, depth: number, maximizingPlayer: boolean): number {
         let value: number;
-        if(depth == 0){
+        if (depth == 0) {
             return position.value;
         }
-        if(maximizingPlayer){
+        if (maximizingPlayer) {
             value = -Infinity;
             for (let i = 0; i < position.childNodes.length; i++) {
-                value = max(value, this.minimax(position.childNodes[i], depth -1, false));
+                value = max(value, this.minimax(position.childNodes[i], depth - 1, false));
             }
             position.value = value;
             return value
-        }else if (!maximizingPlayer){
+        } else if (!maximizingPlayer) {
             value = Infinity;
             for (let i = 0; i < position.childNodes.length; i++) {
                 value = min(value, this.minimax(position.childNodes[i], depth - 1, true));
@@ -321,9 +323,9 @@ class MinimaxAI {
         }
     }
 
-    getChildNodeIndexWithValue(node: MyNode): number{
+    getChildNodeIndexWithValue(node: MyNode): number {
         for (let i = 0; i < node.childNodes.length; i++) {
-            if(node.childNodes[i].value == node.value){
+            if (node.childNodes[i].value == node.value) {
                 return this.Nodes.indexOf(node.childNodes[i]);
             }
         }
