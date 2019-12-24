@@ -123,7 +123,7 @@ function getPieceAbsoluteValue(piece) {
         default:
     }
 }
-const maxDepth = 4;
+const maxDepth = 3;
 class MinimaxAI {
     constructor(board) {
         this.board = board;

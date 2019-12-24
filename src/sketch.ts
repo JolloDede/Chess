@@ -30,6 +30,7 @@ function draw() {
         background(100);
         showGrid();
         board.show();
+        board.setScore();
         MinAI = new MinimaxAI(board);
         RandAI = new RandomAI(board);
     }
@@ -70,5 +71,6 @@ function mousePressed(event?: object): void {
             movingPiece.movingThisPiece = false;
         }
         moving = !moving;
+        board.setScore();
     }
 }

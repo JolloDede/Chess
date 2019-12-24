@@ -84,15 +84,6 @@ class Piece {
         }
         return false;
     }
-    generateNewBoards(currentBoard) {
-        var boards;
-        var moves = this.generateMoves(currentBoard);
-        for (var i = 0; i < moves.length; i++) {
-            boards[i] = currentBoard.clone();
-            boards[i].movePiece(this.matrixPosition, moves[i]);
-        }
-        return boards;
-    }
 }
 class King extends Piece {
     constructor(x, y, isWhite) {
@@ -104,6 +95,7 @@ class King extends Piece {
             this.pic = images[6];
         }
         this.value = 99;
+        this.underattack = false;
     }
     canMove(x, y, board) {
         if (!this.withinBounds(x, y)) {
