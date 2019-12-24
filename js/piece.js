@@ -84,10 +84,16 @@ class Piece {
         }
         return false;
     }
+    setNewLocation(x, y) {
+        this.matrixPosition = createVector(x, y);
+        this.pixelPositon = createVector(x * tileSize + tileSize / 2, y * tileSize + tileSize / 2);
+    }
 }
 class King extends Piece {
     constructor(x, y, isWhite) {
         super(x, y, isWhite, "K", null);
+        this.firstTurn = true;
+        this.gotAttacked = false;
         if (isWhite) {
             this.pic = images[0];
         }
@@ -95,7 +101,6 @@ class King extends Piece {
             this.pic = images[6];
         }
         this.value = 99;
-        this.underattack = false;
     }
     canMove(x, y, board) {
         if (!this.withinBounds(x, y)) {
@@ -104,8 +109,23 @@ class King extends Piece {
         if (this.attackingAllies(x, y, board)) {
             return false;
         }
+        if (this.moveTroughPieces(x, y, board)) {
+            return false;
+        }
         if (abs(x - this.matrixPosition.x) <= 1 && abs(y - this.matrixPosition.y) <= 1) {
+            this.firstTurn = false;
             return true;
+        }
+        // if (this.firstTurn && !this.gotAttacked &&
+        //     (abs(x - this.matrixPosition.x) == 2 || abs(x - this.matrixPosition.x) == -2)
+        //     && abs(y - this.matrixPosition.y) == 0) {
+        //     return true;
+        // }
+        if (this.firstTurn && !this.gotAttacked && abs(x - this.matrixPosition.x) == 2 && abs(y - this.matrixPosition.y) == 0) {
+            return this.rochade(x, this.white, board);
+        }
+        if (this.firstTurn && !this.gotAttacked && abs(x - this.matrixPosition.x) == -2 && abs(y - this.matrixPosition.y) == 0) {
+            return this.rochade(x, this.white, board);
         }
     }
     generateMoves(board) {
@@ -127,6 +147,42 @@ class King extends Piece {
         var cloneKing = new King(this.matrixPosition.x, this.matrixPosition.y, this.white);
         cloneKing.taken = this.taken;
         return cloneKing;
+    }
+    rochade(kingX, white, board) {
+        if (white) {
+            for (let i = 0; i < board.whitePieces.length; i++) {
+                if (board.whitePieces[i] instanceof Rook) {
+                    if (abs(kingX - board.whitePieces[i].matrixPosition.x) <= 2) {
+                        if (board.whitePieces[i].firstTurn) {
+                            if (kingX > this.matrixPosition.x) {
+                                board.whitePieces[i].setNewLocation(this.matrixPosition.x + 1, this.matrixPosition.y);
+                            }
+                            else {
+                                board.whitePieces[i].setNewLocation(this.matrixPosition.x - 1, this.matrixPosition.y);
+                            }
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        else {
+            for (let i = 0; i < board.blackPieces.length; i++) {
+                if (board.blackPieces[i] instanceof Rook) {
+                    if (abs(kingX - board.blackPieces[i].matrixPosition.x) <= 2) {
+                        if (board.blackPieces[i].firstTurn) {
+                            if (kingX > this.matrixPosition.x) {
+                                board.blackPieces[i].setNewLocation(this.matrixPosition.x + 1, this.matrixPosition.y);
+                            }
+                            else {
+                                board.blackPieces[i].setNewLocation(this.matrixPosition.x - 1, this.matrixPosition.y);
+                            }
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 class Queen extends Piece {
@@ -228,6 +284,7 @@ class Queen extends Piece {
 class Rook extends Piece {
     constructor(x, y, isWhite) {
         super(x, y, isWhite, "R", null);
+        this.firstTurn = true;
         if (isWhite) {
             this.pic = images[4];
         }
@@ -247,6 +304,7 @@ class Rook extends Piece {
             if (this.moveTroughPieces(x, y, board)) {
                 return false;
             }
+            this.firstTurn = false;
             return true;
         }
         return false;
