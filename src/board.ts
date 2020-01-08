@@ -86,15 +86,21 @@ class Board {
         this.scoreWhite = 0;
         for (var i = 0; i < this.whitePieces.length; i++) {
             if (this.whitePieces[i].taken) {
-                this.scoreWhite += this.whitePieces[i].value;
+                this.scoreBlack += this.whitePieces[i].value;
             }
         }
         this.scoreBlack = 0;
         for (var i = 0; i < this.blackPieces.length; i++) {
             if (this.blackPieces[i].taken) {
-                this.scoreBlack += this.blackPieces[i].value;
+                this.scoreWhite += this.blackPieces[i].value;
             }
         }
+        this.showScore();
+    }
+
+    showScore(): void{
+        document.getElementById("scoreWhite").innerText = str(this.scoreWhite);
+        document.getElementById("scoreBlack").innerText = str(this.scoreBlack);
     }
 
     movePiece(from: Vektor, to: Vektor): void {
@@ -133,6 +139,26 @@ class Board {
                 this.movePiece(this.blackPieces[i].matrixPosition, dest.blackPieces[i].matrixPosition);
             }
         }
+    }
+
+    kingUnderAttack(king: King): boolean{
+        let pieces: Piece[];
+        let moves: Vektor[] = [];
+        if(king.white){
+            pieces = this.blackPieces;
+        }else{
+            pieces = this.whitePieces;
+        }
+        for (let i = 0; i < pieces.length; i++) {
+            moves = pieces[i].generateMoves(this);
+            for (let i = 0; i < moves.length; i++) {
+                moves[i].x;
+                if(king.matrixPosition.x == moves[i].x && king.matrixPosition.y == moves[i].y){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }

@@ -123,6 +123,7 @@ function getPieceAbsoluteValue(piece) {
         default:
     }
 }
+const maxDepth = 3;
 class MinimaxAI {
     constructor(board) {
         this.board = board;
@@ -149,53 +150,109 @@ class MinimaxAI {
         }
         return value;
     }
-    // Recursion
-    createNewBoardsWithMoves(board, boards) {
-        let moves;
-        moves = [];
-        for (let i = 0; i < board.blackPieces.length; i++) {
-            moves = board.blackPieces[i].generateMoves(board);
-            for (let j = 0; j < moves.length; j++) {
-                boards.push(board.clone());
-                boards[boards.length - 1].movePiece(board.blackPieces[i].matrixPosition, moves[j]);
-                this.Nodes.push(new MyNode());
-                this.Nodes[0].addSubNode(this.Nodes[this.Nodes.length - 1]);
-                this.Nodes[this.Nodes.length - 1].parentNode = this.Nodes[0];
-                this.RootNodeindex = boards.length - 1;
-                this.createNewBoardsWithMovesA(boards[boards.length - 1], boards);
-            }
+    // getWhitePiecesMoves(board: Board): Vektor[]{
+    //     let moves: Vektor[];
+    //     for(var i = 0; i > board.whitePieces.length; i++){
+    //         if(!board.whitePieces[i].taken){
+    //             moves.push(board.whitePieces[i].generateMoves(board));
+    //         }
+    //     }
+    //     return moves;
+    // }
+    //
+    // getBlackPiecesMoves(board: Board): Vektor[]{
+    //     let moves: Vektor[];
+    //     for(var i = 0; i > board.blackPieces.length; i++){
+    //         if(!board.blackPieces[i].taken){
+    //             moves.push(board.blackPieces[i].generateMoves(board));
+    //         }
+    //     }
+    //     return moves;
+    // }
+    // // Recursion
+    // createNewBoardsWithMoves(board: Board, boards: Board[]): void {
+    //     let moves: Vektor[];
+    //     moves = [];
+    //     for (let i: number = 0; i < board.blackPieces.length; i++) {
+    //         moves = board.blackPieces[i].generateMoves(board);
+    //         for (let j: number = 0; j < moves.length; j++) {
+    //             boards.push(board.clone());
+    //             boards[boards.length - 1].movePiece(board.blackPieces[i].matrixPosition, moves[j]);
+    //             this.Nodes.push(new MyNode());
+    //             this.Nodes[0].addSubNode(this.Nodes[this.Nodes.length-1]);
+    //             this.Nodes[this.Nodes.length-1].parentNode = this.Nodes[0];
+    //             this.RootNodeindex = boards.length - 1;
+    //             this.createNewBoardsWithMovesA(boards[boards.length - 1], boards);
+    //         }
+    //     }
+    // }
+    // // Recursion
+    // createNewBoardsWithMovesA(board: Board, boards: Board[]): void {
+    //     let moves: Vektor[];
+    //     moves = [];
+    //     for (let i: number = 0; i < board.whitePieces.length; i++) {
+    //         moves = board.whitePieces[i].generateMoves(board);
+    //         for (let j: number = 0; j < moves.length; j++) {
+    //             boards.push(board.clone());
+    //             boards[boards.length - 1].movePiece(board.whitePieces[i].matrixPosition, moves[j]);
+    //             this.Nodes.push(new MyNode());
+    //             this.Nodes[this.RootNodeindex].addSubNode(this.Nodes[this.Nodes.length - 1]);
+    //             this.Nodes[this.Nodes.length-1].parentNode = this.Nodes[this.RootNodeindex];
+    //             this.BranchNodeindex = boards.length - 1;
+    //             this.createNewBoardsWithMovesB(boards[boards.length - 1], boards);
+    //         }
+    //     }
+    // }
+    // // Recursion
+    // createNewBoardsWithMovesB(board: Board, boards: Board[]): void {
+    //     let moves: Vektor[];
+    //     moves = [];
+    //     for (let i: number = 0; i < board.blackPieces.length; i++) {
+    //         moves = board.blackPieces[i].generateMoves(board);
+    //         for (let j: number = 0; j < moves.length; j++) {
+    //             boards.push(board.clone());
+    //             boards[boards.length - 1].movePiece(board.blackPieces[i].matrixPosition, moves[j]);
+    //             this.Nodes.push(new MyNode());
+    //             this.Nodes[this.Nodes.length-1].value = this.getBoardAbsoluteValue(boards[boards.length-1].blackPieces, boards[boards.length-1].whitePieces);
+    //             this.Nodes[this.BranchNodeindex].addSubNode(this.Nodes[this.Nodes.length - 1]);
+    //             this.Nodes[this.Nodes.length-1].parentNode = this.Nodes[this.BranchNodeindex];
+    //         }
+    //     }
+    // }
+    createNewBoardsWithMovesRecursiv(board, boards, depth) {
+        let moves = [];
+        let pieces;
+        if (depth == maxDepth) {
+            return;
         }
-    }
-    // Recursion
-    createNewBoardsWithMovesA(board, boards) {
-        let moves;
-        moves = [];
-        for (let i = 0; i < board.whitePieces.length; i++) {
-            moves = board.whitePieces[i].generateMoves(board);
-            for (let j = 0; j < moves.length; j++) {
-                boards.push(board.clone());
-                boards[boards.length - 1].movePiece(board.whitePieces[i].matrixPosition, moves[j]);
-                this.Nodes.push(new MyNode());
-                this.Nodes[this.RootNodeindex].addSubNode(this.Nodes[this.Nodes.length - 1]);
-                this.Nodes[this.Nodes.length - 1].parentNode = this.Nodes[this.RootNodeindex];
-                this.BranchNodeindex = boards.length - 1;
-                this.createNewBoardsWithMovesB(boards[boards.length - 1], boards);
-            }
+        if (depth % 2 == 0) {
+            pieces = board.blackPieces;
         }
-    }
-    // Recursion
-    createNewBoardsWithMovesB(board, boards) {
-        let moves;
-        moves = [];
-        for (let i = 0; i < board.blackPieces.length; i++) {
-            moves = board.blackPieces[i].generateMoves(board);
+        else {
+            pieces = board.whitePieces;
+        }
+        for (let i = 0; i < pieces.length; i++) {
+            moves = pieces[i].generateMoves(board);
             for (let j = 0; j < moves.length; j++) {
                 boards.push(board.clone());
-                boards[boards.length - 1].movePiece(board.blackPieces[i].matrixPosition, moves[j]);
+                boards[boards.length - 1].movePiece(pieces[i].matrixPosition, moves[j]);
                 this.Nodes.push(new MyNode());
-                this.Nodes[this.Nodes.length - 1].value = this.getBoardAbsoluteValue(boards[boards.length - 1].blackPieces, boards[boards.length - 1].whitePieces);
-                this.Nodes[this.BranchNodeindex].addSubNode(this.Nodes[this.Nodes.length - 1]);
-                this.Nodes[this.Nodes.length - 1].parentNode = this.Nodes[this.BranchNodeindex];
+                if (depth == 0) {
+                    this.Nodes[0].addSubNode(this.Nodes[this.Nodes.length - 1]);
+                    this.Nodes[this.Nodes.length - 1].parentNode = this.Nodes[0];
+                    this.RootNodeindex = boards.length - 1;
+                }
+                if (depth == 1) {
+                    this.Nodes[this.RootNodeindex].addSubNode(this.Nodes[this.Nodes.length - 1]);
+                    this.Nodes[this.Nodes.length - 1].parentNode = this.Nodes[this.RootNodeindex];
+                    this.BranchNodeindex = boards.length - 1;
+                }
+                if (depth == maxDepth - 1) {
+                    this.Nodes[this.Nodes.length - 1].value = this.getBoardAbsoluteValue(boards[boards.length - 1].blackPieces, boards[boards.length - 1].whitePieces);
+                    this.Nodes[this.BranchNodeindex].addSubNode(this.Nodes[this.Nodes.length - 1]);
+                    this.Nodes[this.Nodes.length - 1].parentNode = this.Nodes[this.BranchNodeindex];
+                }
+                this.createNewBoardsWithMovesRecursiv(boards[boards.length - 1], boards, depth + 1);
             }
         }
     }
@@ -205,11 +262,8 @@ class MinimaxAI {
         let bestMoveIndex;
         boards.push(this.board);
         this.Nodes.push(new MyNode());
-        this.createNewBoardsWithMoves(this.board, boards);
-        // for (var i = 0; i < this.Nodes.length; i++) {
-        //     console.log(this.Nodes[i].value);
-        //     console.log("Child: " + str(this.Nodes[i].childNodes.length-1));
-        // }
+        // this.createNewBoardsWithMoves(this.board, boards);
+        this.createNewBoardsWithMovesRecursiv(this.board, boards, 0);
         console.log(boards.length + " " + this.Nodes.length);
         console.log(this.minimax(this.Nodes[0], 3, true), this.Nodes[0].value);
         bestMoveIndex = this.getChildNodeIndexWithValue(this.Nodes[0]);

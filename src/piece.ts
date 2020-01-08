@@ -96,14 +96,9 @@ abstract class Piece {
     return false;
   }
 
-  generateNewBoards(currentBoard: Board): Board[] {
-    var boards: Board[];
-    var moves = this.generateMoves(currentBoard);
-    for (var i = 0; i < moves.length; i++) {
-      boards[i] = currentBoard.clone();
-      boards[i].movePiece(this.matrixPosition, moves[i]);
-    }
-    return boards;
+  setNewLocation(x: number, y: number) {
+    this.matrixPosition = createVector(x, y);
+    this.pixelPositon = createVector(x * tileSize + tileSize / 2, y * tileSize + tileSize / 2);
   }
 
   abstract generateMoves(board: Board): Vektor[];
@@ -111,8 +106,12 @@ abstract class Piece {
 }
 
 class King extends Piece {
+  firstTurn: boolean;
+  gotAttacked: boolean;
   constructor(x: number, y: number, isWhite: boolean) {
     super(x, y, isWhite, "K", null);
+    this.firstTurn = true;
+    this.gotAttacked = false;
     if (isWhite) {
       this.pic = images[0];
     } else {
@@ -128,8 +127,23 @@ class King extends Piece {
     if (this.attackingAllies(x, y, board)) {
       return false;
     }
+    if (this.moveTroughPieces(x, y, board)) {
+      return false;
+    }
     if (abs(x - this.matrixPosition.x) <= 1 && abs(y - this.matrixPosition.y) <= 1) {
+      this.firstTurn = false;
       return true;
+    }
+    // if (this.firstTurn && !this.gotAttacked &&
+    //     (abs(x - this.matrixPosition.x) == 2 || abs(x - this.matrixPosition.x) == -2)
+    //     && abs(y - this.matrixPosition.y) == 0) {
+    //     return true;
+    // }
+    if (this.firstTurn && !this.gotAttacked && abs(x - this.matrixPosition.x) == 2 && abs(y - this.matrixPosition.y) == 0) {
+      return this.rochade(x, this.white, board);
+    }
+    if (this.firstTurn && !this.gotAttacked && abs(x - this.matrixPosition.x) == -2 && abs(y - this.matrixPosition.y) == 0) {
+      return this.rochade(x, this.white, board);
     }
   }
 
@@ -153,6 +167,40 @@ class King extends Piece {
     var cloneKing = new King(this.matrixPosition.x, this.matrixPosition.y, this.white);
     cloneKing.taken = this.taken;
     return cloneKing;
+  }
+
+  rochade(kingX: number, white: boolean, board: Board): boolean {
+    if (white) {
+      for (let i = 0; i < board.whitePieces.length; i++) {
+        if (board.whitePieces[i] instanceof Rook) {
+          if (abs(kingX - board.whitePieces[i].matrixPosition.x) <= 2) {
+            if ((board.whitePieces[i] as Rook).firstTurn) {
+              if (kingX > this.matrixPosition.x) {
+                board.whitePieces[i].setNewLocation(this.matrixPosition.x + 1, this.matrixPosition.y)
+              } else {
+                board.whitePieces[i].setNewLocation(this.matrixPosition.x - 1, this.matrixPosition.y)
+              }
+              return true;
+            }
+          }
+        }
+      }
+    } else {
+      for (let i = 0; i < board.blackPieces.length; i++) {
+        if (board.blackPieces[i] instanceof Rook) {
+          if (abs(kingX - board.blackPieces[i].matrixPosition.x) <= 2) {
+            if ((board.blackPieces[i] as Rook).firstTurn) {
+              if (kingX > this.matrixPosition.x) {
+                board.blackPieces[i].setNewLocation(this.matrixPosition.x + 1, this.matrixPosition.y);
+              } else {
+                board.blackPieces[i].setNewLocation(this.matrixPosition.x - 1, this.matrixPosition.y);
+              }
+              return true;
+            }
+          }
+        }
+      }
+    }
   }
 
 }
@@ -191,9 +239,9 @@ class Queen extends Piece {
   }
 
   generateMoves(board: Board): Vektor[] {
-    var moves:Vektor[] = [];
-    if(this.taken){
-        return [];
+    var moves: Vektor[] = [];
+    if (this.taken) {
+      return [];
     }
     // Horizontal
     for (var i = 0; i < 8; i++) {
@@ -260,8 +308,10 @@ class Queen extends Piece {
 }
 
 class Rook extends Piece {
+  firstTurn: boolean;
   constructor(x: number, y: number, isWhite: boolean) {
     super(x, y, isWhite, "R", null);
+    this.firstTurn = true;
     if (isWhite) {
       this.pic = images[4];
     } else {
@@ -281,6 +331,7 @@ class Rook extends Piece {
       if (this.moveTroughPieces(x, y, board)) {
         return false;
       }
+      this.firstTurn = false;
       return true;
     }
     return false;
@@ -288,8 +339,8 @@ class Rook extends Piece {
 
   generateMoves(board: Board): Vektor[] {
     var moves: Vektor[] = [];
-    if(this.taken){
-        return [];
+    if (this.taken) {
+      return [];
     }
     for (var i = 0; i < 8; i++) {
       var x: number = i;
@@ -354,8 +405,8 @@ class Bishop extends Piece {
 
   generateMoves(board: Board): Vektor[] {
     var moves: Vektor[] = [];
-    if(this.taken){
-        return [];
+    if (this.taken) {
+      return [];
     }
     for (var i = 0; i < 8; i++) {
       var x = i;
@@ -422,8 +473,8 @@ class Knigth extends Piece {
 
   generateMoves(board: Board): Vektor[] {
     var moves: Vektor[] = [];
-    if(this.taken){
-        return [];
+    if (this.taken) {
+      return [];
     }
     for (var i = -2; i < 3; i += 4) {
       for (var j = -1; j < 2; j += 2) {
@@ -523,8 +574,8 @@ class Pawn extends Piece {
     var moves: Vektor[] = [];
     var x: number;
     var y: number;
-    if(this.taken){
-        return [];
+    if (this.taken) {
+      return [];
     }
     for (var i = -1; i < 2; i += 2) {
       x = this.matrixPosition.x + i;
