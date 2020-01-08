@@ -1,3 +1,5 @@
+import { RandomAI, MinimaxAI } from 'AI';
+import { Board } from 'board';
 var board;
 var moving = false;
 var images = [];

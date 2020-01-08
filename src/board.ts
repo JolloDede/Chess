@@ -1,4 +1,7 @@
-class Board {
+import {Vektor} from 'sketch';
+import {Piece, King, Rook, Knigth, Bishop, Queen, Pawn} from 'piece';
+
+export class Board {
     whitePieces: Piece[];
     blackPieces: Piece[];
     scoreWhite: number;

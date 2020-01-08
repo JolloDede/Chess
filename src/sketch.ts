@@ -1,4 +1,8 @@
-interface Vektor{
+import {Piece} from 'piece';
+import {RandomAI, MinimaxAI} from 'AI';
+import {Board} from 'board';
+
+export interface Vektor{
     x: number
     y: number;
 }

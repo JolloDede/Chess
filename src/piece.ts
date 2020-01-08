@@ -1,15 +1,21 @@
-abstract class Piece {
+import {Image} from 'p5';
+import {Vektor} from 'sketch';
+import {Board} from 'board';
+
+export abstract class Piece {
   matrixPosition: Vektor;
   pixelPositon: Vektor;
   taken: boolean;
   white: boolean;
   letter: string;
-  pic: any;
+  pic: Image;
   movingThisPiece: boolean;
   value: number;
+  static tileSize: number;
+  static images: Image[];
   constructor(x: number, y: number, isWhite: boolean, letter: string, pic: any) {
     this.matrixPosition = createVector(x, y);
-    this.pixelPositon = createVector(x * tileSize + tileSize / 2, y * tileSize + tileSize / 2);
+    this.pixelPositon = createVector(x * Piece.tileSize + Piece.tileSize / 2, y * Piece.tileSize + Piece.tileSize / 2);
 
     this.taken = false;
     this.white = isWhite;
@@ -33,10 +39,10 @@ abstract class Piece {
       //textAlign(CENTER, CENTER);
       if (this.movingThisPiece) {
         //text(this.letter, mouseX, mouseY);
-        image(this.pic, mouseX - 50, mouseY - 50, tileSize * 1.5, tileSize * 1.5);
+        image(this.pic, mouseX - 50, mouseY - 50, Piece.tileSize * 1.5, Piece.tileSize * 1.5);
       } else {
         //text(this.letter, this.pixelPositon.x, this.pixelPositon.y);
-        image(this.pic, this.pixelPositon.x - 50, this.pixelPositon.y - 50, tileSize, tileSize);
+        image(this.pic, this.pixelPositon.x - 50, this.pixelPositon.y - 50, Piece.tileSize, Piece.tileSize);
       }
     }
   }
@@ -47,7 +53,7 @@ abstract class Piece {
       attacking.taken = true;
     }
     this.matrixPosition = createVector(x, y);
-    this.pixelPositon = createVector(x * tileSize + tileSize / 2, y * tileSize + tileSize / 2);
+    this.pixelPositon = createVector(x * Piece.tileSize + Piece.tileSize / 2, y * Piece.tileSize + Piece.tileSize / 2);
   }
 
   withinBounds(x: number, y: number): boolean {
@@ -98,14 +104,14 @@ abstract class Piece {
 
   setNewLocation(x: number, y: number) {
     this.matrixPosition = createVector(x, y);
-    this.pixelPositon = createVector(x * tileSize + tileSize / 2, y * tileSize + tileSize / 2);
+    this.pixelPositon = createVector(x * Piece.tileSize + Piece.tileSize / 2, y * Piece.tileSize + Piece.tileSize / 2);
   }
 
   abstract generateMoves(board: Board): Vektor[];
   abstract canMove(x: number, y: number, board: Board): boolean;
 }
 
-class King extends Piece {
+export class King extends Piece {
   firstTurn: boolean;
   gotAttacked: boolean;
   constructor(x: number, y: number, isWhite: boolean) {
@@ -113,9 +119,9 @@ class King extends Piece {
     this.firstTurn = true;
     this.gotAttacked = false;
     if (isWhite) {
-      this.pic = images[0];
+      this.pic = King.images[0];
     } else {
-      this.pic = images[6];
+      this.pic = King.images[6];
     }
     this.value = 99;
   }
@@ -205,13 +211,13 @@ class King extends Piece {
 
 }
 
-class Queen extends Piece {
+export class Queen extends Piece {
   constructor(x: number, y: number, isWhite: boolean) {
     super(x, y, isWhite, "Q", null);
     if (isWhite) {
-      this.pic = images[1];
+      this.pic = Queen.images[1];
     } else {
-      this.pic = images[7];
+      this.pic = Queen.images[7];
     }
     this.value = 9;
   }
@@ -307,15 +313,15 @@ class Queen extends Piece {
 
 }
 
-class Rook extends Piece {
+export class Rook extends Piece {
   firstTurn: boolean;
   constructor(x: number, y: number, isWhite: boolean) {
     super(x, y, isWhite, "R", null);
     this.firstTurn = true;
     if (isWhite) {
-      this.pic = images[4];
+      this.pic = Rook.images[4];
     } else {
-      this.pic = images[10];
+      this.pic = Rook.images[10];
     }
     this.value = 5;
   }
@@ -376,13 +382,13 @@ class Rook extends Piece {
 
 }
 
-class Bishop extends Piece {
+export class Bishop extends Piece {
   constructor(x: number, y: number, isWhite: boolean) {
     super(x, y, isWhite, "B", null);
     if (isWhite) {
-      this.pic = images[2];
+      this.pic = Bishop.images[2];
     } else {
-      this.pic = images[8];
+      this.pic = Bishop.images[8];
     }
     this.value = 3;
   }
@@ -446,13 +452,13 @@ class Bishop extends Piece {
 
 }
 
-class Knigth extends Piece {
+export class Knigth extends Piece {
   constructor(x: number, y: number, isWhite: boolean) {
     super(x, y, isWhite, "Kn", null);
     if (isWhite) {
-      this.pic = images[3];
+      this.pic = Knigth.images[3];
     } else {
-      this.pic = images[9];
+      this.pic = Knigth.images[9];
     }
     this.value = 3;
   }
@@ -510,15 +516,15 @@ class Knigth extends Piece {
 
 }
 
-class Pawn extends Piece {
+export class Pawn extends Piece {
   firstTurn: boolean;
   constructor(x: number, y: number, isWhite: boolean) {
     super(x, y, isWhite, "p", null);
     this.firstTurn = true;
     if (isWhite) {
-      this.pic = images[5];
+      this.pic = Pawn.images[5];
     } else {
-      this.pic = images[11];
+      this.pic = Pawn.images[11];
     }
     this.value = 1;
   }

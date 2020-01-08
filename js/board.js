@@ -1,4 +1,5 @@
-class Board {
+import { King, Rook, Knigth, Bishop, Queen, Pawn } from 'piece';
+export class Board {
     constructor() {
         this.scoreWhite = 0;
         this.scoreBlack = 0;

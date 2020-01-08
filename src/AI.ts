@@ -1,3 +1,7 @@
+import {Board} from 'board';
+import {Piece} from 'piece';
+import {Vektor} from 'sketch';
+
 class MyNode {
     value: number;
     childNodes: MyNode[];
@@ -13,7 +17,7 @@ class MyNode {
 
 }
 
-class RandomAI {
+export class RandomAI {
     pieces: Piece[];
     board: Board;
     constructor(board: Board) {
@@ -147,7 +151,7 @@ function getPieceAbsoluteValue(piece: Piece): number {
 
 const maxDepth = 3;
 
-class MinimaxAI {
+export class MinimaxAI {
     board: Board;
     pieces: Piece[];
     Nodes: MyNode[];
@@ -300,7 +304,7 @@ class MinimaxAI {
         console.log(boards.length + " " + this.Nodes.length);
         console.log(this.minimax(this.Nodes[0], 3, true), this.Nodes[0].value);
         bestMoveIndex = this.getChildNodeIndexWithValue(this.Nodes[0]);
-        board.adjustBoards(boards[bestMoveIndex]);
+        this.board.adjustBoards(boards[bestMoveIndex]);
     }
 
     minimax(position: MyNode, depth: number, maximizingPlayer: boolean): number {

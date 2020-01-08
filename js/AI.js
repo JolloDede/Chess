@@ -7,7 +7,7 @@ class MyNode {
         this.childNodes.push(value);
     }
 }
-class RandomAI {
+export class RandomAI {
     constructor(board) {
         this.pieces = board.blackPieces;
         this.board = board;
@@ -124,7 +124,7 @@ function getPieceAbsoluteValue(piece) {
     }
 }
 const maxDepth = 3;
-class MinimaxAI {
+export class MinimaxAI {
     constructor(board) {
         this.board = board;
         this.pieces = board.blackPieces;
@@ -267,7 +267,7 @@ class MinimaxAI {
         console.log(boards.length + " " + this.Nodes.length);
         console.log(this.minimax(this.Nodes[0], 3, true), this.Nodes[0].value);
         bestMoveIndex = this.getChildNodeIndexWithValue(this.Nodes[0]);
-        board.adjustBoards(boards[bestMoveIndex]);
+        this.board.adjustBoards(boards[bestMoveIndex]);
     }
     minimax(position, depth, maximizingPlayer) {
         let value;
